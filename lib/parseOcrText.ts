@@ -1,14 +1,5 @@
 import type { InvoiceJson, ProfileJson } from '@/types'
 
-function grab(text: string, label: string, endLabels: string[] = []): string {
-  const escapedLabel = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const end = endLabels.length
-    ? '(?=' + endLabels.map(l => l.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + '|$)'
-    : '(.{0,120})'
-  const re = new RegExp(escapedLabel + '\\s*:?\\s*([\\s\\S]{1,200}?)' + end, 'i')
-  const m = text.match(re)
-  return m ? m[1].trim().replace(/\n/g, ' ').trim() : ''
-}
 
 function grabLine(text: string, label: string): string {
   const escapedLabel = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -81,12 +72,30 @@ export function parseInvoiceText(text: string): InvoiceJson {
       email: (text.match(/export@[\w.]+/i) || [])[0] || '',
       phone: (text.match(/\+91[\d-]{10,14}/) || [])[0] || '',
     },
-    consignee: {
-      name: consigneeBlock.split('\n')[0]?.trim() || grabLine(text, 'Consignee'),
-      address: consigneeBlock.split('\n').slice(1, 3).join(', ').trim(),
-      phone: (consigneeBlock.match(/\+971[\d-]{9,13}/) || [])[0] || '',
-      email: (consigneeBlock.match(/[\w.]+@[\w.]+/) || [])[0] || '',
-    },
+    consignee: (() => {
+      const phone = (consigneeBlock.match(/\+971[\d\s()-]{8,14}/) || [])[0]?.trim() || ''
+      const email = (consigneeBlock.match(/[\w.+-]+@[\w.-]+\.[a-z]{2,}/i) || [])[0]?.trim() || ''
+      // Collect address lines: skip the name (line 0), skip lines that are phone/email
+      const addrLines = consigneeBlock
+        .split('\n')
+        .slice(1)
+        .map(l => l.trim())
+        .filter(l => l && !/^(Phone|Tel|Fax|Email|E-mail|\|)/i.test(l))
+        .slice(0, 2)
+      // Strip any phone/email that OCR ran into the address string
+      const address = addrLines
+        .join(', ')
+        .replace(/[,\s]*(?:Phone|Tel|Fax)[:\s]+[\+\d\s()|-]+/gi, '')
+        .replace(/[,\s|]*(?:E-?mail)[:\s]+[\w.+@-]+/gi, '')
+        .replace(/\s*\|\s*/g, '')
+        .trim()
+      return {
+        name: consigneeBlock.split('\n')[0]?.trim() || grabLine(text, 'Consignee'),
+        address,
+        phone,
+        email,
+      }
+    })(),
     shipment: {
       invoice_no: grabLine(text, 'Invoice No'),
       invoice_date: grabLine(text, 'Date'),

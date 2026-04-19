@@ -13,7 +13,8 @@ function AuthForm() {
   )
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [company, setCompany] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const supabase = createClient()
@@ -23,13 +24,18 @@ function AuthForm() {
     setError('')
     try {
       if (tab === 'signup') {
-        const { error } = await supabase.auth.signUp({ email, password })
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { data: { first_name: firstName, last_name: lastName } },
+        })
         if (error) throw error
+        router.push('/onboarding')
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) throw error
+        router.push('/dashboard/upload')
       }
-      router.push('/dashboard/profile')
       router.refresh()
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Authentication failed')
@@ -114,10 +120,18 @@ function AuthForm() {
 
             <div className="space-y-4">
               {tab === 'signup' && (
-                <div>
-                  <label className="text-xs text-slate-400 mb-1.5 block">Company Name</label>
-                  <input type="text" placeholder="XIMVERSE EXPORTS PVT LTD" value={company} onChange={e => setCompany(e.target.value)} />
-                </div>
+                <>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs text-slate-400 mb-1.5 block">First Name</label>
+                      <input type="text" placeholder="Ashutosh" value={firstName} onChange={e => setFirstName(e.target.value)} />
+                    </div>
+                    <div>
+                      <label className="text-xs text-slate-400 mb-1.5 block">Last Name</label>
+                      <input type="text" placeholder="Rai" value={lastName} onChange={e => setLastName(e.target.value)} />
+                    </div>
+                  </div>
+                </>
               )}
               <div>
                 <label className="text-xs text-slate-400 mb-1.5 block">Email address</label>
