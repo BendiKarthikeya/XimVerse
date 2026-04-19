@@ -22,6 +22,8 @@ export async function GET() {
   })
 }
 
+export const maxDuration = 60
+
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData()
@@ -29,6 +31,10 @@ export async function POST(req: NextRequest) {
     const docType = formData.get('docType') as string | null
 
     if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+
+    if (file.size > 1_000_000) {
+      return NextResponse.json({ error: 'File too large. Max 1MB for OCR.' }, { status: 413 })
+    }
 
     const apiKey = process.env.OCR_SPACE_API_KEY || 'helloworld'
     const ocrForm = new FormData()
@@ -38,12 +44,17 @@ export async function POST(req: NextRequest) {
     ocrForm.append('isOverlayRequired', 'false')
     ocrForm.append('detectOrientation', 'true')
     ocrForm.append('scale', 'true')
-    ocrForm.append('OCREngine', '2')
+    ocrForm.append('OCREngine', '1')
+
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 50_000)
 
     const ocrRes = await fetch('https://api.ocr.space/parse/image', {
       method: 'POST',
       body: ocrForm,
+      signal: controller.signal,
     })
+    clearTimeout(timeout)
 
     if (!ocrRes.ok) {
       const body = await ocrRes.text().catch(() => '')

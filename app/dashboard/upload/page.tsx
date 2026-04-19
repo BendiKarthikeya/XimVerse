@@ -4,6 +4,7 @@ import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { DEMO_SOURCE_JSON, DEMO_PROFILE } from '@/lib/demoData'
+import { parseInvoiceText, parseProfileText } from '@/lib/parseOcrText'
 import type { InvoiceJson, ProfileJson } from '@/types'
 
 type UploadState = 'idle' | 'uploading' | 'done' | 'error'
@@ -56,13 +57,21 @@ export default function UploadPage() {
 
       const { data: urlData } = supabase.storage.from('source-documents').getPublicUrl(path)
 
-      // OCR
-      const form = new FormData()
-      form.append('file', file)
-      form.append('docType', docType)
-      const res = await fetch('/api/ocr', { method: 'POST', body: form })
-      if (!res.ok) throw new Error('OCR failed')
-      const { parsed } = await res.json()
+      // OCR directly from browser — avoids Vercel serverless timeout
+      const ocrForm = new FormData()
+      ocrForm.append('file', file)
+      ocrForm.append('apikey', process.env.NEXT_PUBLIC_OCR_SPACE_API_KEY || 'helloworld')
+      ocrForm.append('language', 'eng')
+      ocrForm.append('isOverlayRequired', 'false')
+      ocrForm.append('detectOrientation', 'true')
+      ocrForm.append('scale', 'true')
+      ocrForm.append('OCREngine', '1')
+      const ocrRes = await fetch('https://api.ocr.space/parse/image', { method: 'POST', body: ocrForm })
+      if (!ocrRes.ok) throw new Error(`OCR service error: ${ocrRes.status}`)
+      const ocrData = await ocrRes.json()
+      if (ocrData.IsErroredOnProcessing) throw new Error(ocrData.ErrorMessage?.[0] ?? 'OCR failed')
+      const rawText: string = ocrData.ParsedResults?.map((r: { ParsedText: string }) => r.ParsedText).join('\n') ?? ''
+      const parsed = docType === 'company_profile' ? parseProfileText(rawText) : parseInvoiceText(rawText)
 
       // Save to DB
       await supabase.from('source_documents').insert({
@@ -75,21 +84,22 @@ export default function UploadPage() {
 
       // If company profile, update profiles table
       if (docType === 'company_profile' && parsed) {
+        const p = parsed as ProfileJson
         await supabase.from('profiles').upsert({
           user_id: user.id,
-          company_name: parsed.company_name,
-          address: parsed.address,
-          iec: parsed.iec,
-          gstin: parsed.gstin,
-          pan: parsed.pan,
-          tan: parsed.tan,
-          export_commodity: parsed.export_commodity,
-          signatory_name: parsed.signatory?.name,
-          signatory_designation: parsed.signatory?.designation,
+          company_name: p.company_name,
+          address: p.address,
+          iec: p.iec,
+          gstin: p.gstin,
+          pan: p.pan,
+          tan: p.tan,
+          export_commodity: p.export_commodity,
+          signatory_name: p.signatory?.name,
+          signatory_designation: p.signatory?.designation,
         }, { onConflict: 'user_id' })
-        setJson2(parsed)
+        setJson2(p)
       } else {
-        setJson1(parsed)
+        setJson1(parsed as InvoiceJson)
       }
 
       setS('done')
