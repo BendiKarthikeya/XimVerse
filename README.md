@@ -83,28 +83,42 @@ The current codebase is the **core automation engine** powering the pilot:
 
 No hyperbole. Commercial Invoices are typed by hand into Word templates. Packing Lists are copy-pasted from the last shipment. HS codes are looked up in PDFs. Errors cause customs holds that cost ₹2–5 lakh per incident. **There is no AI-powered, self-serve export documentation tool built for Indian MSMEs. Zero.** The incumbents — Customs House Agents, freight forwarders, trade consultants — profit from this complexity and have no incentive to automate it away. We do.
 
+### The wedge: India's agri-commodity SME exporters
+
+XIMVERSE's entry point is **small and mid-sized exporters in India's agri-commodity sector** — rice, spices, pulses — who face three compounding problems:
+
+1. **Manual documentation** — every shipment means retyping the same exporter IEC, GSTIN, and bank details into a fresh Word file
+2. **Fragmented workflows** — Commercial Invoice, Packing List, B/L data, and LC terms all live in separate files with no single source of truth
+3. **No access to ERPs** — SAP and Oracle cost ₹10–50 lakh to implement; Tally doesn't do export-specific CBEC formats
+
+Unlike generic document tools, XIMVERSE is **purpose-built for export-specific workflows** — Invoice, Packing List, B/L data, LC terms — with pre-mapped templates aligned to DGFT guidelines and real trade practices. This niche is **underserved, highly repetitive, and sticky**: once an exporter's IEC, GSTIN, bank details, and product HS codes are in the system, they never leave.
+
 ### Why the moat is real and defensible
 
 | Layer | Why it's hard to copy |
 |-------|-----------------------|
 | **Undigitized segment, zero competition** | The only "competition" is Excel, WhatsApp-forwarded Word files, and ₹15,000-per-consignment CHAs. No funded startup is targeting this. |
-| **India-specific compliance formats** | CBEC Commercial Invoice, IEC codes, GSTIN validation, Shipping Bill (ICEGATE) — a foreign SaaS can't clone this without years of domain work |
+| **Purpose-built for export workflows** | Pre-mapped CBEC templates (Invoice, Packing List, B/L, LC terms) aligned to DGFT — not adapted from a generic doc tool |
+| **India-specific compliance formats** | IEC codes, GSTIN validation, Shipping Bill (ICEGATE), DGFT export license fields — a foreign SaaS can't clone this without years of domain work |
 | **First-mover relationships** | Deendayal Port Authority pilot, BITS Pilani Startup Hub, FIEO/APEDA pipeline — institutional trust takes years to build and can't be bought |
-| **AI roadmap nobody has started** | The regex engine is v1. The AI layer — automatic HS code classification, compliance risk flagging, hallucination-free field extraction from any document format — is v2 and nobody has built it for this segment |
-| **Government portal integration path** | ICEGATE (customs filing), DGFT (export licenses), FSSAI, MoC — becoming the trusted connector between MSMEs and government portals is a decade-long position |
+| **AI roadmap nobody has started** | The regex engine is v1. The AI layer — automatic HS code classification, compliance risk flagging, hallucination-free extraction from any document format — is v2 and nobody has built it for this segment |
+| **Government portal integration path** | ICEGATE (customs filing), DGFT (export licenses), FSSAI, MoC — becoming the trusted connector between SMEs and government portals is a decade-long position |
 
 ### Expansion path: wedge → ecosystem
 
 ```
-v1 (now)      2 documents, deterministic regex, Indian agri/rice exporters
-v2 (Q3 2026)  10-document pack, AI-assisted fill, all MSME commodities
-v3 (2027)     API layer for CHAs + freight forwarders (B2B SaaS)
-Platform      ICEGATE real-time filing, compliance risk scoring, 1-click export pack
-              → every participant in the trade chain: exporters, importers,
-                CHAs, freight forwarders, inspection agencies, govt portals
+v1 (now)      Agri-commodity SME exporters (rice, spices, pulses)
+              2 documents, CBEC format, deterministic extraction
+v2 (Q3 2026)  All MSME commodities, 10-document pack, AI-assisted fill
+              Importers + CHAs added as user types
+v3 (2027)     API layer for freight forwarders and CHA back-offices (B2B SaaS)
+              ICEGATE real-time filing, compliance risk scoring
+Platform      1-click complete export pack for every participant:
+              exporters → importers → CHAs → freight forwarders →
+              inspection agencies → government portals
 ```
 
-**The wedge is MSME exporters.** The platform is the entire Indian cross-border trade ecosystem — a market with no dominant software player and 63 million businesses waiting to be unlocked.
+**The wedge is agri-commodity SME exporters.** The platform is the entire Indian cross-border trade ecosystem — a market with no dominant software player, 63 million businesses waiting to be unlocked, and export documentation that has not changed in 30 years.
 
 ---
 
