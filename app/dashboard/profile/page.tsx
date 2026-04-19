@@ -36,7 +36,7 @@ export default function ProfilePage() {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
-        await supabase.from('profiles').upsert({ ...profile, user_id: user.id })
+        await supabase.from('profiles').upsert({ ...profile, user_id: user.id }, { onConflict: 'user_id' })
       }
     }
     setSaving(false)

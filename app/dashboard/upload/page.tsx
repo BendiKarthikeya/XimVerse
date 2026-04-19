@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { DEMO_SOURCE_JSON } from '@/lib/demoData'
+import { DEMO_SOURCE_JSON, DEMO_PROFILE } from '@/lib/demoData'
 import type { InvoiceJson, ProfileJson } from '@/types'
 
 type UploadState = 'idle' | 'uploading' | 'done' | 'error'
@@ -15,6 +15,7 @@ export default function UploadPage() {
   const [json1, setJson1] = useState<InvoiceJson | null>(null)
   const [json2, setJson2] = useState<ProfileJson | null>(null)
   const [showJson1, setShowJson1] = useState(false)
+  const [showJson2, setShowJson2] = useState(false)
   const [err1, setErr1] = useState('')
   const [err2, setErr2] = useState('')
   const ref1 = useRef<HTMLInputElement>(null)
@@ -34,7 +35,10 @@ export default function UploadPage() {
     if (isDemo) {
       await new Promise(r => setTimeout(r, 1800))
       if (docType === 'invoice') { setJson1(DEMO_SOURCE_JSON); setState1('done') }
-      else setState2('done')
+      else {
+        setJson2({ company_name: DEMO_PROFILE.company_name ?? undefined, address: DEMO_PROFILE.address ?? undefined, iec: DEMO_PROFILE.iec ?? undefined, gstin: DEMO_PROFILE.gstin ?? undefined, pan: DEMO_PROFILE.pan ?? undefined, tan: DEMO_PROFILE.tan ?? undefined, export_commodity: DEMO_PROFILE.export_commodity ?? undefined, signatory: { name: DEMO_PROFILE.signatory_name ?? undefined, designation: DEMO_PROFILE.signatory_designation ?? undefined } })
+        setState2('done')
+      }
       return
     }
 
@@ -82,7 +86,7 @@ export default function UploadPage() {
           export_commodity: parsed.export_commodity,
           signatory_name: parsed.signatory?.name,
           signatory_designation: parsed.signatory?.designation,
-        })
+        }, { onConflict: 'user_id' })
         setJson2(parsed)
       } else {
         setJson1(parsed)
@@ -216,7 +220,7 @@ export default function UploadPage() {
         <UploadZone n={2} label="Company Profile" sublabel="One-time upload — saved to your profile"
           color="139,92,246" state={state2} json={json2} err={err2}
           inputRef={ref2} onPick={onFilePick('company_profile')}
-          showToggle={false} showJson={false} onToggle={() => {}} />
+          showToggle={true} showJson={showJson2} onToggle={() => setShowJson2(v => !v)} />
       </div>
 
       {bothDone && (

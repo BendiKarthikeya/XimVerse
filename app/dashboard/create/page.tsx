@@ -18,6 +18,39 @@ const PDFPreviewPanel = dynamic(
 
 type Step = 1 | 2 | 3
 
+// Table-header strings that OCR sometimes captures as item field values
+const TABLE_HEADERS = new Set(['hs code', 'unit', 'qty', 'unit price', 'amount', 'description', 'product code', 'product'])
+
+// Merges `incoming` over `base` — nested objects merged recursively,
+// empty/null/zero/header values in `incoming` fall back to `base`.
+// Arrays of objects are merged element-by-element against the base array.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function deepMerge(base: any, incoming: any): any {
+  const result = { ...base }
+  for (const key of Object.keys(incoming ?? {})) {
+    const inVal = incoming[key]
+    const baseVal = base?.[key]
+    if (inVal === null || inVal === undefined || inVal === '' || inVal === 0) continue
+    // Reject strings that are known table column headers (OCR off-by-one artefact)
+    if (typeof inVal === 'string' && TABLE_HEADERS.has(inVal.toLowerCase())) continue
+    if (Array.isArray(inVal)) {
+      if (inVal.length === 0) continue
+      // Merge each object element against the corresponding base element
+      if (typeof inVal[0] === 'object' && Array.isArray(baseVal) && baseVal.length > 0) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        result[key] = inVal.map((item: any, i: number) => deepMerge(baseVal[i] ?? baseVal[0], item))
+      } else {
+        result[key] = inVal
+      }
+    } else if (typeof inVal === 'object') {
+      result[key] = deepMerge(baseVal, inVal)
+    } else {
+      result[key] = inVal
+    }
+  }
+  return result
+}
+
 export default function CreatePage() {
   const [step, setStep] = useState<Step>(1)
   const [profile, setProfile] = useState<Partial<Profile>>(DEMO_PROFILE)
@@ -37,8 +70,18 @@ export default function CreatePage() {
       const supabase = createClient()
       supabase.auth.getUser().then(async ({ data }) => {
         if (!data.user) return
+
         const { data: p } = await supabase.from('profiles').select('*').eq('user_id', data.user.id).single()
-        if (p) setProfile(p)
+        if (p) {
+          // Merge DB profile over static fallback — null/empty DB fields keep the static value
+          setProfile(prev => ({
+            ...prev,
+            ...Object.fromEntries(
+              Object.entries(p).filter(([, v]) => v !== null && v !== undefined && v !== '')
+            ),
+          }))
+        }
+
         const { data: docs } = await supabase
           .from('source_documents')
           .select('*')
@@ -46,7 +89,12 @@ export default function CreatePage() {
           .eq('doc_type', 'invoice')
           .order('created_at', { ascending: false })
           .limit(1)
-        if (docs?.[0]?.extracted_json) setSourceJson(docs[0].extracted_json as InvoiceJson)
+        if (docs?.[0]?.extracted_json) {
+          const loaded = docs[0].extracted_json as InvoiceJson
+          // Deep-merge loaded JSON over static fallback — missing/empty fields keep static values
+          setSourceJson(prev => deepMerge(prev, loaded))
+        }
+
         const { count } = await supabase
           .from('consignments')
           .select('*', { count: 'exact', head: true })

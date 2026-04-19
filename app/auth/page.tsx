@@ -33,7 +33,7 @@ function AuthForm() {
           },
         })
         if (error) throw error
-        router.push('/onboarding')
+        router.push('/dashboard/upload')
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) throw error
