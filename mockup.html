@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>XIMVERSE — Export Documentation Suite</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  *{font-family:'Inter',sans-serif;box-sizing:border-box;}
+  .page{display:none;min-height:100vh;}
+  .page.active{display:block;}
+  .gradient-bg{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);}
+  .card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);}
+  .card-hover:hover{background:rgba(255,255,255,0.07);border-color:rgba(99,102,241,0.4);transition:all 0.2s;}
+  .btn-primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);}
+  .btn-primary:hover{background:linear-gradient(135deg,#5254cc,#7c3aed);transform:translateY(-1px);}
+  .upload-zone{border:2px dashed rgba(99,102,241,0.4);background:rgba(99,102,241,0.04);transition:all 0.2s;}
+  .upload-zone:hover{border-color:rgba(99,102,241,0.8);background:rgba(99,102,241,0.08);cursor:pointer;}
+  .upload-zone.done{border:2px solid rgba(34,197,94,0.6);background:rgba(34,197,94,0.06);}
+  .status-generated{background:rgba(34,197,94,0.15);color:#4ade80;border:1px solid rgba(34,197,94,0.3);}
+  .status-draft{background:rgba(234,179,8,0.15);color:#facc15;border:1px solid rgba(234,179,8,0.3);}
+  .status-downloaded{background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.3);}
+  .modal-bg{background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);}
+  .modal-box{background:#1e293b;border:1px solid rgba(255,255,255,0.1);}
+  .nav-link{padding:6px 16px;border-radius:8px;font-size:13px;font-weight:500;transition:all 0.15s;color:#94a3b8;cursor:pointer;}
+  .nav-link:hover{color:#e2e8f0;background:rgba(255,255,255,0.06);}
+  .nav-link.active{color:#fff;background:rgba(99,102,241,0.25);border:1px solid rgba(99,102,241,0.3);}
+  .fade-in{animation:fadeIn 0.35s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  .slide-up{animation:slideUp 0.5s ease;}
+  @keyframes slideUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+  .progress-bar{animation:progress 2.2s ease-in-out forwards;}
+  @keyframes progress{from{width:0%}to{width:100%}}
+  .pulse{animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+  .glow{box-shadow:0 0 40px rgba(99,102,241,0.3);}
+  .hero-glow{position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(99,102,241,0.15) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+  .feature-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);transition:all 0.2s;}
+  .feature-card:hover{background:rgba(99,102,241,0.08);border-color:rgba(99,102,241,0.3);transform:translateY(-2px);}
+  .tag{font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
+  .input{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e2e8f0;border-radius:10px;padding:10px 14px;font-size:14px;width:100%;outline:none;transition:border-color 0.15s;}
+  .input:focus{border-color:rgba(99,102,241,0.6);background:rgba(255,255,255,0.07);}
+  .input::placeholder{color:#475569;}
+  .auth-tab{padding:8px 20px;border-radius:8px;font-size:14px;font-weight:500;transition:all 0.15s;cursor:pointer;}
+  .auth-tab.active{background:rgba(99,102,241,0.3);color:#fff;border:1px solid rgba(99,102,241,0.5);}
+  .auth-tab:not(.active){color:#64748b;}
+  .invoice-preview{background:#fff;font-family:'Inter',sans-serif;color:#000;font-size:9px;}
+  .invoice-preview table{border-collapse:collapse;width:100%;}
+  .invoice-preview td,.invoice-preview th{border:1px solid #000;padding:3px 5px;}
+  .hcell{font-weight:700;background:#000;color:#fff;}
+  ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#0f172a;}::-webkit-scrollbar-thumb{background:#334155;border-radius:3px;}
+  .step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
+  .news-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);transition:all 0.2s;}
+  .news-card:hover{background:rgba(255,255,255,0.06);border-color:rgba(99,102,241,0.3);transform:translateY(-2px);}
+</style>
+</head>
+<body class="gradient-bg text-white">
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE 1: LANDING
+═══════════════════════════════════════════════════════ -->
+<div id="page-landing" class="page active">
+  <!-- Navbar -->
+  <nav class="border-b border-white/10 px-8 py-4 flex items-center justify-between sticky top-0 z-20" style="background:rgba(15,23,42,0.92);backdrop-filter:blur(14px);">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg btn-primary flex items-center justify-center font-black text-sm">X</div>
+      <span class="font-bold text-lg tracking-tight">XIMVERSE</span>
+    </div>
+    <div class="flex items-center gap-6 text-sm text-slate-400">
+      <a class="hover:text-white transition-colors cursor-pointer">Features</a>
+      <a class="hover:text-white transition-colors cursor-pointer">How it works</a>
+      <a class="hover:text-white transition-colors cursor-pointer">Pricing</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button onclick="goTo('page-auth','login')" class="text-sm text-slate-300 hover:text-white px-4 py-2 rounded-lg border border-white/10 hover:border-white/25 transition-all">Log In</button>
+      <button onclick="goTo('page-auth','signup')" class="text-sm font-semibold px-4 py-2 rounded-lg btn-primary text-white transition-all">Get Started Free</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="relative flex flex-col items-center justify-center text-center px-6 pt-28 pb-24 overflow-hidden">
+    <div class="hero-glow"></div>
+    <div class="slide-up space-y-6 max-w-3xl mx-auto relative z-10">
+      <span class="tag inline-block px-3 py-1.5 rounded-full bg-indigo-500/15 text-indigo-400 border border-indigo-500/25">Hackathon Build · Export Documentation Suite</span>
+      <h1 class="text-5xl font-black leading-tight tracking-tight">
+        Upload Docs →<br/>
+        <span style="background:linear-gradient(135deg,#6366f1,#a78bfa,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Auto Fill Templates</span><br/>
+        → Download PDFs
+      </h1>
+      <p class="text-lg text-slate-400 max-w-xl mx-auto leading-relaxed">
+        Stop typing the same export data over and over. Upload your 2 PDFs, let OCR extract everything, and get your Commercial Invoice + Packing List in under 2 minutes.
+      </p>
+      <div class="flex items-center justify-center gap-4 pt-2">
+        <button onclick="goTo('page-auth','signup')" class="px-6 py-3 rounded-xl btn-primary font-semibold text-sm glow transition-all">Start for Free →</button>
+        <button onclick="demoLogin()" class="px-6 py-3 rounded-xl border border-white/15 text-sm text-slate-300 hover:border-white/30 hover:text-white transition-all">Continue as Demo User</button>
+      </div>
+      <p class="text-xs text-slate-600">No credit card required · Works with any Indian exporter document</p>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="px-8 py-16 max-w-5xl mx-auto">
+    <h2 class="text-2xl font-bold text-center mb-12">How it works in <span class="text-indigo-400">4 steps</span></h2>
+    <div class="grid grid-cols-4 gap-6 relative">
+      <div class="absolute top-5 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-indigo-500/40 to-transparent hidden md:block"></div>
+      <div class="feature-card rounded-2xl p-6 text-center space-y-3">
+        <div class="step-dot mx-auto btn-primary text-white">1</div>
+        <div class="w-10 h-10 mx-auto rounded-xl bg-indigo-500/20 flex items-center justify-center">
+          <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+        </div>
+        <p class="font-semibold text-sm">Upload 2 PDFs</p>
+        <p class="text-xs text-slate-500">Commercial Invoice + Company Profile</p>
+      </div>
+      <div class="feature-card rounded-2xl p-6 text-center space-y-3">
+        <div class="step-dot mx-auto bg-purple-500/30 text-purple-300">2</div>
+        <div class="w-10 h-10 mx-auto rounded-xl bg-purple-500/20 flex items-center justify-center">
+          <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        </div>
+        <p class="font-semibold text-sm">OCR Extraction</p>
+        <p class="text-xs text-slate-500">OCR.space reads and structures all data</p>
+      </div>
+      <div class="feature-card rounded-2xl p-6 text-center space-y-3">
+        <div class="step-dot mx-auto bg-cyan-500/30 text-cyan-300">3</div>
+        <div class="w-10 h-10 mx-auto rounded-xl bg-cyan-500/20 flex items-center justify-center">
+          <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
+        </div>
+        <p class="font-semibold text-sm">JSON → Templates</p>
+        <p class="text-xs text-slate-500">Auto-fills both document templates</p>
+      </div>
+      <div class="feature-card rounded-2xl p-6 text-center space-y-3">
+        <div class="step-dot mx-auto bg-emerald-500/30 text-emerald-300">4</div>
+        <div class="w-10 h-10 mx-auto rounded-xl bg-emerald-500/20 flex items-center justify-center">
+          <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <p class="font-semibold text-sm">Download PDFs</p>
+        <p class="text-xs text-slate-500">ZIP with Commercial Invoice + Packing List</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="px-8 py-8 pb-20 max-w-5xl mx-auto">
+    <div class="grid grid-cols-3 gap-5">
+      <div class="feature-card rounded-2xl p-6 space-y-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center"><svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+        <p class="font-semibold">Under 2 Minutes</p>
+        <p class="text-sm text-slate-500">From upload to downloadable PDFs in under 2 minutes. No typing, no errors.</p>
+      </div>
+      <div class="feature-card rounded-2xl p-6 space-y-3">
+        <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center"><svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+        <p class="font-semibold">Fixed Format Accuracy</p>
+        <p class="text-sm text-slate-500">Regex parser tuned to your exact document format — not generic OCR guesswork.</p>
+      </div>
+      <div class="feature-card rounded-2xl p-6 space-y-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center"><svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg></div>
+        <p class="font-semibold">Full History</p>
+        <p class="text-sm text-slate-500">All consignments saved in Supabase. Re-download any previous set anytime.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/5 px-8 py-6 text-center text-xs text-slate-600">
+    © 2026 XIMVERSE · Built for Hackathon · Powered by Supabase + OCR.space + React PDF
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE 2: AUTH (Sign In / Login)
+═══════════════════════════════════════════════════════ -->
+<div id="page-auth" class="page">
+  <div class="min-h-screen flex">
+    <!-- Left panel -->
+    <div class="hidden lg:flex flex-col justify-between w-1/2 p-12 relative overflow-hidden" style="background:linear-gradient(135deg,#0f172a,#1e1b4b);">
+      <div style="position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(99,102,241,0.2) 0%,transparent 70%);top:40%;left:40%;transform:translate(-50%,-50%);pointer-events:none;"></div>
+      <div class="flex items-center gap-3 relative z-10">
+        <div class="w-8 h-8 rounded-lg btn-primary flex items-center justify-center font-black text-sm">X</div>
+        <span class="font-bold text-lg tracking-tight">XIMVERSE</span>
+      </div>
+      <div class="space-y-8 relative z-10">
+        <div>
+          <h2 class="text-3xl font-black leading-tight mb-3">Export docs in<br/><span class="text-indigo-400">2 minutes flat.</span></h2>
+          <p class="text-slate-400 text-sm leading-relaxed">Upload → OCR → Fill → Download. The fastest way to generate compliant export documentation.</p>
+        </div>
+        <div class="space-y-4">
+          <div class="flex items-center gap-3 text-sm text-slate-400">
+            <div class="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0"><svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+            Commercial Invoice auto-generated
+          </div>
+          <div class="flex items-center gap-3 text-sm text-slate-400">
+            <div class="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0"><svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+            Packing List auto-generated
+          </div>
+          <div class="flex items-center gap-3 text-sm text-slate-400">
+            <div class="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0"><svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+            OCR-powered data extraction
+          </div>
+          <div class="flex items-center gap-3 text-sm text-slate-400">
+            <div class="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0"><svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+            Full consignment history saved
+          </div>
+        </div>
+      </div>
+      <p class="text-xs text-slate-700 relative z-10">© 2026 XIMVERSE</p>
+    </div>
+
+    <!-- Right panel -->
+    <div class="flex-1 flex items-center justify-center p-8" style="background:#0f172a;">
+      <div class="w-full max-w-sm space-y-8 fade-in">
+        <!-- Back -->
+        <button onclick="goTo('page-landing')" class="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          Back to home
+        </button>
+
+        <div>
+          <div class="flex items-center gap-2 mb-6">
+            <div class="w-7 h-7 rounded-lg btn-primary flex items-center justify-center font-black text-xs">X</div>
+            <span class="font-bold text-base">XIMVERSE</span>
+          </div>
+          <!-- Tabs -->
+          <div class="flex gap-2 mb-8">
+            <button id="tab-login" onclick="switchAuthTab('login')" class="auth-tab active">Log In</button>
+            <button id="tab-signup" onclick="switchAuthTab('signup')" class="auth-tab">Sign Up</button>
+          </div>
+
+          <!-- Login Form -->
+          <div id="form-login" class="space-y-4">
+            <div>
+              <label class="text-xs text-slate-400 mb-1.5 block">Email address</label>
+              <input class="input" type="email" placeholder="export@yourcompany.com"/>
+            </div>
+            <div>
+              <label class="text-xs text-slate-400 mb-1.5 block">Password</label>
+              <input class="input" type="password" placeholder="••••••••"/>
+            </div>
+            <div class="flex justify-end">
+              <a class="text-xs text-indigo-400 hover:text-indigo-300 cursor-pointer">Forgot password?</a>
+            </div>
+            <button onclick="doLogin()" class="w-full py-3 rounded-xl btn-primary font-semibold text-sm text-white transition-all">Log In</button>
+            <div class="relative flex items-center gap-3 py-1">
+              <div class="flex-1 h-px bg-white/10"></div>
+              <span class="text-xs text-slate-600">or</span>
+              <div class="flex-1 h-px bg-white/10"></div>
+            </div>
+            <button onclick="demoLogin()" class="w-full py-3 rounded-xl border border-white/10 hover:border-indigo-500/40 text-sm text-slate-300 hover:text-white transition-all flex items-center justify-center gap-2">
+              <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              Continue as Demo User
+            </button>
+          </div>
+
+          <!-- Signup Form -->
+          <div id="form-signup" class="space-y-4 hidden">
+            <div>
+              <label class="text-xs text-slate-400 mb-1.5 block">Company Name</label>
+              <input class="input" type="text" placeholder="XIMVERSE EXPORTS PVT LTD"/>
+            </div>
+            <div>
+              <label class="text-xs text-slate-400 mb-1.5 block">Email address</label>
+              <input class="input" type="email" placeholder="export@yourcompany.com"/>
+            </div>
+            <div>
+              <label class="text-xs text-slate-400 mb-1.5 block">Password</label>
+              <input class="input" type="password" placeholder="Min 8 characters"/>
+            </div>
+            <button onclick="doLogin()" class="w-full py-3 rounded-xl btn-primary font-semibold text-sm text-white transition-all">Create Account</button>
+            <div class="relative flex items-center gap-3 py-1">
+              <div class="flex-1 h-px bg-white/10"></div><span class="text-xs text-slate-600">or</span><div class="flex-1 h-px bg-white/10"></div>
+            </div>
+            <button onclick="demoLogin()" class="w-full py-3 rounded-xl border border-white/10 hover:border-indigo-500/40 text-sm text-slate-300 hover:text-white transition-all flex items-center justify-center gap-2">
+              <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              Continue as Demo User
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE 3+: DASHBOARD (all sections share this shell)
+═══════════════════════════════════════════════════════ -->
+<div id="page-dashboard" class="page">
+  <!-- Top Nav -->
+  <header class="border-b border-white/10 px-6 py-3 flex items-center justify-between sticky top-0 z-20" style="background:rgba(15,23,42,0.96);backdrop-filter:blur(14px);">
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-lg btn-primary flex items-center justify-center font-black text-xs">X</div>
+        <span class="font-bold text-base tracking-tight">XIMVERSE</span>
+      </div>
+      <!-- Nav Links -->
+      <nav class="flex items-center gap-1 ml-4">
+        <span onclick="switchSection('profile')" id="nav-profile" class="nav-link active">Profile</span>
+        <span onclick="switchSection('upload')" id="nav-upload" class="nav-link">Upload Docs</span>
+        <span onclick="switchSection('create')" id="nav-create" class="nav-link">
+          <span class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Create Consignment
+          </span>
+        </span>
+        <span onclick="switchSection('history')" id="nav-history" class="nav-link">History</span>
+        <span onclick="switchSection('news')" id="nav-news" class="nav-link">News & Updates</span>
+      </nav>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-1.5 text-xs text-slate-500">
+        <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse"></div>
+        Supabase connected
+      </div>
+      <div class="flex items-center gap-2 cursor-pointer hover:bg-white/5 rounded-lg px-2 py-1 transition-colors">
+        <div class="w-7 h-7 rounded-full bg-indigo-500/30 flex items-center justify-center text-indigo-300 text-xs font-bold">AR</div>
+        <span class="text-sm text-slate-300">Ashutosh Rai</span>
+        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </div>
+      <button onclick="goTo('page-landing')" class="text-xs text-slate-500 hover:text-slate-300 border border-white/10 rounded-lg px-3 py-1.5 transition-all">Sign Out</button>
+    </div>
+  </header>
+
+  <!-- Section content -->
+  <div class="max-w-6xl mx-auto px-6 py-10">
+
+    <!-- ── PROFILE SECTION ── -->
+    <div id="section-profile" class="fade-in space-y-6">
+      <div>
+        <h1 class="text-2xl font-bold">Company Profile</h1>
+        <p class="text-sm text-slate-500 mt-1">Your profile is used to auto-fill the Exporter fields in every generated document.</p>
+      </div>
+      <div class="grid grid-cols-3 gap-6">
+        <!-- Profile Card -->
+        <div class="col-span-1 card rounded-2xl p-6 space-y-5">
+          <div class="flex flex-col items-center text-center space-y-3 pb-4 border-b border-white/10">
+            <div class="w-16 h-16 rounded-2xl btn-primary flex items-center justify-center font-black text-2xl">X</div>
+            <div>
+              <p class="font-bold text-white">XIMVERSE EXPORTS PVT LTD</p>
+              <p class="text-xs text-slate-400 mt-0.5">Bengaluru, Karnataka, India</p>
+            </div>
+            <span class="tag px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400">Profile Complete</span>
+          </div>
+          <div class="space-y-3">
+            <div class="flex justify-between text-sm"><span class="text-slate-500">IEC</span><span class="font-mono text-slate-300 text-xs">XIMV1234567</span></div>
+            <div class="flex justify-between text-sm"><span class="text-slate-500">GSTIN</span><span class="font-mono text-slate-300 text-xs">29ABCDE1234F1Z5</span></div>
+            <div class="flex justify-between text-sm"><span class="text-slate-500">PAN</span><span class="font-mono text-slate-300 text-xs">ABCDE1234F</span></div>
+            <div class="flex justify-between text-sm"><span class="text-slate-500">TAN</span><span class="font-mono text-slate-300 text-xs">BLRA12345B</span></div>
+            <div class="flex justify-between text-sm"><span class="text-slate-500">Commodity</span><span class="text-slate-300 text-xs">Basmati Rice 1121</span></div>
+            <div class="flex justify-between text-sm"><span class="text-slate-500">Signatory</span><span class="text-slate-300 text-xs">Ashutosh Rai</span></div>
+          </div>
+        </div>
+        <!-- Edit Form -->
+        <div class="col-span-2 card rounded-2xl p-6 space-y-5">
+          <h3 class="font-semibold text-slate-200">Edit Profile Details</h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div><label class="text-xs text-slate-500 mb-1.5 block">Company Name</label><input class="input text-sm" value="XIMVERSE EXPORTS PVT LTD"/></div>
+            <div><label class="text-xs text-slate-500 mb-1.5 block">Email</label><input class="input text-sm" value="export@ximverse.com"/></div>
+            <div><label class="text-xs text-slate-500 mb-1.5 block">Phone</label><input class="input text-sm" value="+91-9876543210"/></div>
+            <div><label class="text-xs text-slate-500 mb-1.5 block">IEC Code</label><input class="input text-sm" value="XIMV1234567"/></div>
+            <div><label class="text-xs text-slate-500 mb-1.5 block">GSTIN</label><input class="input text-sm" value="29ABCDE1234F1Z5"/></div>
+            <div><label class="text-xs text-slate-500 mb-1.5 block">PAN</label><input class="input text-sm" value="ABCDE1234F"/></div>
+            <div class="col-span-2"><label class="text-xs text-slate-500 mb-1.5 block">Address</label><input class="input text-sm" value="#45, Whitefield Industrial Area, Bengaluru, Karnataka, India – 560066"/></div>
+            <div><label class="text-xs text-slate-500 mb-1.5 block">Authorized Signatory</label><input class="input text-sm" value="Ashutosh Rai"/></div>
+            <div><label class="text-xs text-slate-500 mb-1.5 block">Designation</label><input class="input text-sm" value="Export Manager"/></div>
+            <div><label class="text-xs text-slate-500 mb-1.5 block">Bank — SWIFT</label><input class="input text-sm" value="HDFCINBBXXX"/></div>
+            <div><label class="text-xs text-slate-500 mb-1.5 block">Bank — IFSC</label><input class="input text-sm" value="HDFC0001234"/></div>
+          </div>
+          <div class="flex gap-3 pt-2">
+            <button onclick="showToast('Profile saved to Supabase')" class="px-5 py-2.5 rounded-xl btn-primary text-sm font-semibold text-white">Save Profile</button>
+            <button class="px-5 py-2.5 rounded-xl border border-white/10 text-sm text-slate-400 hover:text-slate-300 transition-colors">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── UPLOAD SECTION ── -->
+    <div id="section-upload" class="hidden fade-in space-y-6">
+      <div>
+        <h1 class="text-2xl font-bold">Upload Source Documents</h1>
+        <p class="text-sm text-slate-500 mt-1">Upload your 2 fixed-format PDFs. OCR extracts all data and stores it in Supabase as structured JSON.</p>
+      </div>
+      <div class="grid grid-cols-2 gap-6">
+        <!-- Doc 1 -->
+        <div class="card rounded-2xl p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-semibold text-slate-200">Commercial Invoice & Packing List</h3>
+              <p class="text-xs text-slate-500 mt-0.5">Per-consignment data — buyer, shipment, products, amounts</p>
+            </div>
+            <span class="tag px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400">Doc 1</span>
+          </div>
+          <div id="uz1" class="upload-zone rounded-xl p-8 text-center space-y-3" onclick="simulateUpload(1)">
+            <div class="w-12 h-12 mx-auto rounded-xl bg-indigo-500/20 flex items-center justify-center">
+              <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-slate-300">Drop PDF here or click to upload</p>
+              <p class="text-xs text-slate-600 mt-1">Max 1MB · PDF only</p>
+            </div>
+            <div id="up1-idle" class="text-xs text-indigo-400 font-medium">Select File</div>
+            <div id="up1-progress" class="hidden space-y-2">
+              <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-indigo-500 rounded-full progress-bar"></div></div>
+              <p class="text-xs text-slate-400">Sending to OCR.space...</p>
+            </div>
+          </div>
+          <div id="up1-result" class="hidden fade-in space-y-3">
+            <div class="flex items-center gap-2"><div class="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center"><svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div><span class="text-sm font-medium text-emerald-400">Extracted successfully</span></div>
+            <div class="bg-slate-800/60 rounded-xl p-4 space-y-2">
+              <div class="flex justify-between text-xs"><span class="text-slate-500">Invoice No</span><span class="text-slate-300">XIM/EXP/2026/045</span></div>
+              <div class="flex justify-between text-xs"><span class="text-slate-500">Buyer</span><span class="text-slate-300">Al Noor Food Trading LLC</span></div>
+              <div class="flex justify-between text-xs"><span class="text-slate-500">Product</span><span class="text-slate-300">Basmati Rice 1121 Steam · 25 MT</span></div>
+              <div class="flex justify-between text-xs"><span class="text-slate-500">Amount</span><span class="text-slate-300 font-semibold">USD 23,750</span></div>
+              <div class="flex justify-between text-xs"><span class="text-slate-500">Route</span><span class="text-slate-300">Chennai → Jebel Ali</span></div>
+              <div class="flex justify-between text-xs"><span class="text-slate-500">Vessel</span><span class="text-slate-300">MSC Valencia · VY4587</span></div>
+            </div>
+            <button onclick="toggleJsonView(1)" class="text-xs text-slate-500 hover:text-slate-300 flex items-center gap-1.5 transition-colors">
+              <svg id="jarrow1" class="w-3 h-3 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              View raw JSON
+            </button>
+            <div id="json1" class="hidden bg-slate-900 rounded-xl p-3 overflow-auto max-h-40"><pre class="text-xs text-emerald-400">{"consignee":{"name":"Al Noor Food Trading LLC"},
+"shipment":{"invoice_no":"XIM/EXP/2026/045","vessel":"MSC Valencia"},
+"items":[{"product_code":"RICE-1121","qty":25,"amount":23750}],
+"payment":{"incoterm":"CIF","currency":"USD"}}</pre></div>
+          </div>
+        </div>
+
+        <!-- Doc 2 -->
+        <div class="card rounded-2xl p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-semibold text-slate-200">Company Profile</h3>
+              <p class="text-xs text-slate-500 mt-0.5">One-time upload — saves to your profile, reused for all consignments</p>
+            </div>
+            <span class="tag px-2 py-0.5 rounded bg-purple-500/20 text-purple-400">Doc 2</span>
+          </div>
+          <div id="uz2" class="upload-zone rounded-xl p-8 text-center space-y-3" onclick="simulateUpload(2)">
+            <div class="w-12 h-12 mx-auto rounded-xl bg-purple-500/20 flex items-center justify-center">
+              <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-slate-300">Drop PDF here or click to upload</p>
+              <p class="text-xs text-slate-600 mt-1">Max 1MB · PDF only</p>
+            </div>
+            <div id="up2-idle" class="text-xs text-purple-400 font-medium">Select File</div>
+            <div id="up2-progress" class="hidden space-y-2">
+              <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-purple-500 rounded-full progress-bar"></div></div>
+              <p class="text-xs text-slate-400">Updating profile in Supabase...</p>
+            </div>
+          </div>
+          <div id="up2-result" class="hidden fade-in space-y-3">
+            <div class="flex items-center gap-2"><div class="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center"><svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div><span class="text-sm font-medium text-emerald-400">Profile updated in Supabase</span></div>
+            <div class="bg-slate-800/60 rounded-xl p-4 space-y-2">
+              <div class="flex justify-between text-xs"><span class="text-slate-500">Company</span><span class="text-slate-300">XIMVERSE EXPORTS PVT LTD</span></div>
+              <div class="flex justify-between text-xs"><span class="text-slate-500">IEC Code</span><span class="text-slate-300 font-mono">XIMV1234567</span></div>
+              <div class="flex justify-between text-xs"><span class="text-slate-500">GSTIN</span><span class="text-slate-300 font-mono">29ABCDE1234F1Z5</span></div>
+              <div class="flex justify-between text-xs"><span class="text-slate-500">PAN</span><span class="text-slate-300 font-mono">ABCDE1234F</span></div>
+              <div class="flex justify-between text-xs"><span class="text-slate-500">Signatory</span><span class="text-slate-300">Ashutosh Rai, Export Manager</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- CTA -->
+      <div id="uploadCTA" class="hidden fade-in card rounded-2xl p-5 flex items-center justify-between">
+        <div>
+          <p class="font-semibold text-white">Both documents extracted successfully</p>
+          <p class="text-sm text-slate-400 mt-0.5">Ready to create a consignment and generate export PDFs</p>
+        </div>
+        <button onclick="switchSection('create')" class="px-5 py-2.5 rounded-xl btn-primary text-sm font-semibold text-white flex items-center gap-2">
+          Create New Consignment
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── CREATE CONSIGNMENT SECTION ── -->
+    <div id="section-create" class="hidden fade-in space-y-6">
+      <div>
+        <h1 class="text-2xl font-bold">Create New Consignment</h1>
+        <p class="text-sm text-slate-500 mt-1">Review extracted data, generate documents, preview and download.</p>
+      </div>
+      <div id="create-flow">
+        <!-- Step indicator -->
+        <div class="flex items-center gap-2 mb-8">
+          <div id="step1-dot" class="step-dot btn-primary text-white text-xs">1</div>
+          <span id="step1-label" class="text-sm font-medium text-white">Review Data</span>
+          <div class="flex-1 h-px bg-white/10 mx-2"></div>
+          <div id="step2-dot" class="step-dot bg-slate-700 text-slate-500 text-xs">2</div>
+          <span id="step2-label" class="text-sm text-slate-500">Generate PDFs</span>
+          <div class="flex-1 h-px bg-white/10 mx-2"></div>
+          <div id="step3-dot" class="step-dot bg-slate-700 text-slate-500 text-xs">3</div>
+          <span id="step3-label" class="text-sm text-slate-500">Preview & Download</span>
+        </div>
+
+        <!-- Step 1: Review -->
+        <div id="cs-step1" class="grid grid-cols-2 gap-6">
+          <div class="card rounded-2xl p-6 space-y-4">
+            <h3 class="font-semibold text-slate-200 flex items-center gap-2">
+              <span class="w-5 h-5 rounded btn-primary flex items-center justify-center text-xs">✓</span>
+              Exporter (from Profile)
+            </h3>
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm"><span class="text-slate-500">Company</span><span class="text-white">XIMVERSE EXPORTS PVT LTD</span></div>
+              <div class="flex justify-between text-sm"><span class="text-slate-500">IEC</span><span class="text-slate-300 font-mono text-xs">XIMV1234567</span></div>
+              <div class="flex justify-between text-sm"><span class="text-slate-500">GSTIN</span><span class="text-slate-300 font-mono text-xs">29ABCDE1234F1Z5</span></div>
+              <div class="flex justify-between text-sm"><span class="text-slate-500">Bank SWIFT</span><span class="text-slate-300 font-mono text-xs">HDFCINBBXXX</span></div>
+            </div>
+            <h3 class="font-semibold text-slate-200 flex items-center gap-2 pt-2 border-t border-white/5">
+              <span class="w-5 h-5 rounded btn-primary flex items-center justify-center text-xs">✓</span>
+              Consignee (from Doc 1)
+            </h3>
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm"><span class="text-slate-500">Buyer</span><span class="text-white">Al Noor Food Trading LLC</span></div>
+              <div class="flex justify-between text-sm"><span class="text-slate-500">Address</span><span class="text-slate-300 text-xs">Warehouse 12, Al Aweer, Dubai</span></div>
+              <div class="flex justify-between text-sm"><span class="text-slate-500">Email</span><span class="text-slate-300 text-xs">procurement@alnoorfoods.ae</span></div>
+            </div>
+          </div>
+          <div class="card rounded-2xl p-6 space-y-4">
+            <h3 class="font-semibold text-slate-200 flex items-center gap-2">
+              <span class="w-5 h-5 rounded btn-primary flex items-center justify-center text-xs">✓</span>
+              Shipment Details
+            </h3>
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm"><span class="text-slate-500">Invoice No</span><span class="text-white font-mono text-xs">XIM/EXP/2026/045</span></div>
+              <div class="flex justify-between text-sm"><span class="text-slate-500">Date</span><span class="text-slate-300">19 April 2026</span></div>
+              <div class="flex justify-between text-sm"><span class="text-slate-500">Vessel</span><span class="text-slate-300">MSC Valencia · VY4587</span></div>
+              <div class="flex justify-between text-sm"><span class="text-slate-500">Route</span><span class="text-slate-300">Chennai → Jebel Ali</span></div>
+              <div class="flex justify-between text-sm"><span class="text-slate-500">Incoterm</span><span class="text-slate-300">CIF · USD</span></div>
+              <div class="flex justify-between text-sm"><span class="text-slate-500">LC No</span><span class="text-slate-300 font-mono text-xs">LC2026UAE4587</span></div>
+            </div>
+            <h3 class="font-semibold text-slate-200 flex items-center gap-2 pt-2 border-t border-white/5">
+              <span class="w-5 h-5 rounded btn-primary flex items-center justify-center text-xs">✓</span>
+              Product
+            </h3>
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm"><span class="text-slate-500">Item</span><span class="text-white">Basmati Rice 1121 Steam</span></div>
+              <div class="flex justify-between text-sm"><span class="text-slate-500">HS Code</span><span class="text-slate-300 font-mono text-xs">10063020</span></div>
+              <div class="flex justify-between text-sm"><span class="text-slate-500">Qty</span><span class="text-slate-300">25 MT · USD 950/MT</span></div>
+              <div class="flex justify-between text-sm"><span class="text-slate-500">Total</span><span class="text-white font-bold">USD 23,750</span></div>
+            </div>
+          </div>
+          <div class="col-span-2 flex justify-end">
+            <button onclick="startGenerate()" class="px-6 py-3 rounded-xl btn-primary text-sm font-semibold text-white flex items-center gap-2">
+              Generate Documents
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2: Generating -->
+        <div id="cs-step2" class="hidden fade-in">
+          <div class="card rounded-2xl p-10 text-center space-y-6 max-w-md mx-auto">
+            <div class="w-16 h-16 mx-auto rounded-full bg-indigo-500/20 flex items-center justify-center">
+              <svg id="cs-spinner" class="w-8 h-8 text-indigo-400 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+              <svg id="cs-check" class="hidden w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <div>
+              <p id="cs-title" class="font-bold text-lg text-white">Generating Documents...</p>
+              <p id="cs-sub" class="text-sm text-slate-400 mt-1">Filling Commercial Invoice template</p>
+            </div>
+            <div class="space-y-2">
+              <div class="h-2 bg-slate-700 rounded-full overflow-hidden"><div id="cs-bar" class="h-full bg-indigo-500 rounded-full transition-all duration-500" style="width:0%"></div></div>
+              <p id="cs-pct" class="text-xs text-slate-500 text-right">0%</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Preview & Download -->
+        <div id="cs-step3" class="hidden fade-in space-y-6">
+          <div class="grid grid-cols-2 gap-5">
+            <div class="card rounded-2xl p-5 space-y-3 card-hover cursor-pointer" onclick="openDocPreview('invoice')">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-sm text-white">Commercial Invoice</p>
+                    <p class="text-xs text-emerald-400">Generated · XIM/EXP/2026/045</p>
+                  </div>
+                </div>
+                <span class="status-generated tag px-2 py-0.5 rounded-full">Ready</span>
+              </div>
+              <p class="text-xs text-slate-500">Click to preview full document</p>
+            </div>
+            <div class="card rounded-2xl p-5 space-y-3 card-hover cursor-pointer" onclick="openDocPreview('packing')">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-sm text-white">Packing List</p>
+                    <p class="text-xs text-emerald-400">Generated · XIM/EXP/2026/045</p>
+                  </div>
+                </div>
+                <span class="status-generated tag px-2 py-0.5 rounded-full">Ready</span>
+              </div>
+              <p class="text-xs text-slate-500">Click to preview full document</p>
+            </div>
+          </div>
+          <div class="card rounded-2xl p-5 flex items-center justify-between">
+            <div>
+              <p class="font-semibold text-white">Consignment XIM-2026-045 saved</p>
+              <p class="text-xs text-slate-400 mt-0.5">Both PDFs stored in Supabase Storage · Accessible from History anytime</p>
+            </div>
+            <div class="flex gap-3">
+              <button onclick="openDocPreview('invoice')" class="px-4 py-2.5 rounded-xl border border-white/10 text-sm text-slate-300 hover:text-white transition-colors">Preview</button>
+              <button onclick="showToast('ZIP downloaded — Commercial Invoice + Packing List')" class="px-4 py-2.5 rounded-xl btn-primary text-sm font-semibold text-white flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                Download ZIP
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── HISTORY SECTION ── -->
+    <div id="section-history" class="hidden fade-in space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold">Consignment History</h1>
+          <p class="text-sm text-slate-500 mt-1">All generated export document sets, stored in Supabase.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <input class="input text-sm w-56" placeholder="Search by buyer, ID..."/>
+          <select class="input text-sm w-36"><option>All Status</option><option>Generated</option><option>Downloaded</option><option>Draft</option></select>
+        </div>
+      </div>
+      <!-- Stats -->
+      <div class="grid grid-cols-4 gap-4">
+        <div class="card rounded-xl p-4 space-y-1"><p class="text-xs text-slate-500">Total Consignments</p><p class="text-2xl font-bold text-white">47</p></div>
+        <div class="card rounded-xl p-4 space-y-1"><p class="text-xs text-slate-500">This Month</p><p class="text-2xl font-bold text-indigo-400">8</p></div>
+        <div class="card rounded-xl p-4 space-y-1"><p class="text-xs text-slate-500">Total Value</p><p class="text-2xl font-bold text-emerald-400">$1.2M</p></div>
+        <div class="card rounded-xl p-4 space-y-1"><p class="text-xs text-slate-500">Downloaded</p><p class="text-2xl font-bold text-purple-400">44</p></div>
+      </div>
+      <!-- Table -->
+      <div class="card rounded-2xl overflow-hidden">
+        <table class="w-full text-sm">
+          <thead class="border-b border-white/10">
+            <tr>
+              <th class="text-left py-3.5 px-4 text-slate-500 font-medium text-xs">Consignment ID</th>
+              <th class="text-left py-3.5 px-4 text-slate-500 font-medium text-xs">Date</th>
+              <th class="text-left py-3.5 px-4 text-slate-500 font-medium text-xs">Buyer</th>
+              <th class="text-left py-3.5 px-4 text-slate-500 font-medium text-xs">Product</th>
+              <th class="text-left py-3.5 px-4 text-slate-500 font-medium text-xs">Amount</th>
+              <th class="text-left py-3.5 px-4 text-slate-500 font-medium text-xs">Status</th>
+              <th class="text-left py-3.5 px-4 text-slate-500 font-medium text-xs">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/5">
+            <tr class="hover:bg-white/[0.02] transition-colors">
+              <td class="py-3.5 px-4 font-mono text-indigo-400 text-xs">XIM-2026-045</td>
+              <td class="py-3.5 px-4 text-slate-400 text-xs">19 Apr 2026</td>
+              <td class="py-3.5 px-4 text-slate-300 text-xs">Al Noor Food Trading LLC</td>
+              <td class="py-3.5 px-4 text-slate-400 text-xs">Basmati Rice 1121</td>
+              <td class="py-3.5 px-4 text-slate-300 text-xs font-medium">USD 23,750</td>
+              <td class="py-3.5 px-4"><span class="status-generated tag px-2 py-0.5 rounded-full">Generated</span></td>
+              <td class="py-3.5 px-4"><div class="flex gap-3 text-xs"><button onclick="openDocPreview('invoice')" class="text-indigo-400 hover:text-indigo-300">Preview</button><button onclick="showToast('ZIP downloaded')" class="text-slate-400 hover:text-slate-300">↓ ZIP</button></div></td>
+            </tr>
+            <tr class="hover:bg-white/[0.02] transition-colors">
+              <td class="py-3.5 px-4 font-mono text-indigo-400 text-xs">XIM-2026-042</td>
+              <td class="py-3.5 px-4 text-slate-400 text-xs">12 Apr 2026</td>
+              <td class="py-3.5 px-4 text-slate-300 text-xs">Gulf Grain Trading LLC</td>
+              <td class="py-3.5 px-4 text-slate-400 text-xs">Basmati Rice 1121</td>
+              <td class="py-3.5 px-4 text-slate-300 text-xs font-medium">USD 31,200</td>
+              <td class="py-3.5 px-4"><span class="status-downloaded tag px-2 py-0.5 rounded-full">Downloaded</span></td>
+              <td class="py-3.5 px-4"><div class="flex gap-3 text-xs"><button onclick="openDocPreview('invoice')" class="text-indigo-400 hover:text-indigo-300">Preview</button><button onclick="showToast('ZIP downloaded')" class="text-slate-400 hover:text-slate-300">↓ ZIP</button></div></td>
+            </tr>
+            <tr class="hover:bg-white/[0.02] transition-colors">
+              <td class="py-3.5 px-4 font-mono text-indigo-400 text-xs">XIM-2026-038</td>
+              <td class="py-3.5 px-4 text-slate-400 text-xs">5 Apr 2026</td>
+              <td class="py-3.5 px-4 text-slate-300 text-xs">Al Noor Food Trading LLC</td>
+              <td class="py-3.5 px-4 text-slate-400 text-xs">Basmati Rice 1121</td>
+              <td class="py-3.5 px-4 text-slate-300 text-xs font-medium">USD 23,750</td>
+              <td class="py-3.5 px-4"><span class="status-downloaded tag px-2 py-0.5 rounded-full">Downloaded</span></td>
+              <td class="py-3.5 px-4"><div class="flex gap-3 text-xs"><button onclick="openDocPreview('invoice')" class="text-indigo-400 hover:text-indigo-300">Preview</button><button onclick="showToast('ZIP downloaded')" class="text-slate-400 hover:text-slate-300">↓ ZIP</button></div></td>
+            </tr>
+            <tr class="hover:bg-white/[0.02] transition-colors">
+              <td class="py-3.5 px-4 font-mono text-indigo-400 text-xs">XIM-2026-031</td>
+              <td class="py-3.5 px-4 text-slate-400 text-xs">28 Mar 2026</td>
+              <td class="py-3.5 px-4 text-slate-300 text-xs">Dubai Spice Traders</td>
+              <td class="py-3.5 px-4 text-slate-400 text-xs">Sella Basmati Rice</td>
+              <td class="py-3.5 px-4 text-slate-300 text-xs font-medium">USD 18,400</td>
+              <td class="py-3.5 px-4"><span class="status-draft tag px-2 py-0.5 rounded-full">Draft</span></td>
+              <td class="py-3.5 px-4"><div class="flex gap-3 text-xs"><button onclick="openDocPreview('invoice')" class="text-indigo-400 hover:text-indigo-300">Preview</button><button onclick="showToast('ZIP downloaded')" class="text-slate-400 hover:text-slate-300">↓ ZIP</button></div></td>
+            </tr>
+            <tr class="hover:bg-white/[0.02] transition-colors">
+              <td class="py-3.5 px-4 font-mono text-indigo-400 text-xs">XIM-2026-024</td>
+              <td class="py-3.5 px-4 text-slate-400 text-xs">15 Mar 2026</td>
+              <td class="py-3.5 px-4 text-slate-300 text-xs">Oman Food Distribution</td>
+              <td class="py-3.5 px-4 text-slate-400 text-xs">Basmati Rice 1121</td>
+              <td class="py-3.5 px-4 text-slate-300 text-xs font-medium">USD 47,500</td>
+              <td class="py-3.5 px-4"><span class="status-downloaded tag px-2 py-0.5 rounded-full">Downloaded</span></td>
+              <td class="py-3.5 px-4"><div class="flex gap-3 text-xs"><button onclick="openDocPreview('invoice')" class="text-indigo-400 hover:text-indigo-300">Preview</button><button onclick="showToast('ZIP downloaded')" class="text-slate-400 hover:text-slate-300">↓ ZIP</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── NEWS SECTION ── -->
+    <div id="section-news" class="hidden fade-in space-y-6">
+      <div>
+        <h1 class="text-2xl font-bold">Trade News & Updates</h1>
+        <p class="text-sm text-slate-500 mt-1">Stay updated with export regulations, shipping alerts, and currency changes.</p>
+      </div>
+      <!-- Categories -->
+      <div class="flex gap-2 flex-wrap">
+        <button class="tag px-3 py-1.5 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">All</button>
+        <button class="tag px-3 py-1.5 rounded-full bg-slate-800 text-slate-500 border border-white/5 hover:border-white/15">Currency</button>
+        <button class="tag px-3 py-1.5 rounded-full bg-slate-800 text-slate-500 border border-white/5 hover:border-white/15">Shipping</button>
+        <button class="tag px-3 py-1.5 rounded-full bg-slate-800 text-slate-500 border border-white/5 hover:border-white/15">Trade Policy</button>
+        <button class="tag px-3 py-1.5 rounded-full bg-slate-800 text-slate-500 border border-white/5 hover:border-white/15">Compliance</button>
+      </div>
+      <!-- Featured -->
+      <div class="card rounded-2xl p-6 space-y-3 border-indigo-500/20">
+        <div class="flex items-start justify-between">
+          <span class="tag px-2 py-1 rounded-full bg-indigo-500/20 text-indigo-400">Featured · Trade Policy</span>
+          <span class="text-xs text-slate-600">2 hrs ago</span>
+        </div>
+        <h3 class="text-lg font-bold text-white">India–UAE CEPA: Basmati rice zero-duty extended through 2027</h3>
+        <p class="text-sm text-slate-400 leading-relaxed">The Comprehensive Economic Partnership Agreement between India and UAE has extended the zero-duty status for Basmati rice exports through December 2027, benefiting exporters shipping via CIF terms to Jebel Ali and other UAE ports.</p>
+        <div class="flex items-center gap-2 text-xs text-slate-600">
+          <span>Source: APEDA</span><span>·</span><span>Impact: High for Basmati exporters</span>
+        </div>
+      </div>
+      <!-- Grid -->
+      <div class="grid grid-cols-3 gap-4">
+        <div class="news-card rounded-xl p-5 space-y-3 cursor-pointer">
+          <div class="flex items-center justify-between"><span class="tag px-2 py-0.5 rounded bg-blue-500/20 text-blue-400">Currency</span><span class="text-xs text-slate-600">2 hrs ago</span></div>
+          <p class="font-semibold text-sm text-white">USD/INR at 83.42 — Rupee firms</p>
+          <p class="text-xs text-slate-500 leading-relaxed">RBI intervention steadies the rupee ahead of quarterly review. Exporters advised to monitor LC settlements.</p>
+        </div>
+        <div class="news-card rounded-xl p-5 space-y-3 cursor-pointer">
+          <div class="flex items-center justify-between"><span class="tag px-2 py-0.5 rounded bg-orange-500/20 text-orange-400">Shipping</span><span class="text-xs text-slate-600">5 hrs ago</span></div>
+          <p class="font-semibold text-sm text-white">Jebel Ali Terminal 2 Congestion</p>
+          <p class="text-xs text-slate-500 leading-relaxed">FCL shipments experiencing 3–5 day delays at Jebel Ali Port Terminal 2. Plan departure dates accordingly.</p>
+        </div>
+        <div class="news-card rounded-xl p-5 space-y-3 cursor-pointer">
+          <div class="flex items-center justify-between"><span class="tag px-2 py-0.5 rounded bg-purple-500/20 text-purple-400">Compliance</span><span class="text-xs text-slate-600">1 day ago</span></div>
+          <p class="font-semibold text-sm text-white">New Phytosanitary Format — May 2026</p>
+          <p class="text-xs text-slate-500 leading-relaxed">APEDA mandates updated phytosanitary certificate format from 1 May 2026 for all rice exports to UAE.</p>
+        </div>
+        <div class="news-card rounded-xl p-5 space-y-3 cursor-pointer">
+          <div class="flex items-center justify-between"><span class="tag px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400">Trade</span><span class="text-xs text-slate-600">2 days ago</span></div>
+          <p class="font-semibold text-sm text-white">Chennai Port adds 3 new FCL berths</p>
+          <p class="text-xs text-slate-500 leading-relaxed">Chennai Port Authority inaugurates 3 new FCL berths, reducing turnaround time by 30% for exporters.</p>
+        </div>
+        <div class="news-card rounded-xl p-5 space-y-3 cursor-pointer">
+          <div class="flex items-center justify-between"><span class="tag px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-400">Rates</span><span class="text-xs text-slate-600">3 days ago</span></div>
+          <p class="font-semibold text-sm text-white">Basmati FOB price: $930–960/MT</p>
+          <p class="text-xs text-slate-500 leading-relaxed">1121 Steam Basmati prices steady at $930–960 per MT FOB. Demand from Middle East remains strong.</p>
+        </div>
+        <div class="news-card rounded-xl p-5 space-y-3 cursor-pointer">
+          <div class="flex items-center justify-between"><span class="tag px-2 py-0.5 rounded bg-red-500/20 text-red-400">Alert</span><span class="text-xs text-slate-600">4 days ago</span></div>
+          <p class="font-semibold text-sm text-white">SGS inspection backlog — 4 day delay</p>
+          <p class="text-xs text-slate-500 leading-relaxed">SGS Bengaluru reporting 4-day inspection backlog. Book slots early to avoid departure delays.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PDF PREVIEW MODAL
+═══════════════════════════════════════════════════════ -->
+<div id="previewModal" class="hidden fixed inset-0 z-50 modal-bg flex items-center justify-center p-4">
+  <div class="modal-box rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col fade-in">
+    <div class="flex items-center justify-between p-5 border-b border-white/10">
+      <div class="flex items-center gap-3">
+        <h3 class="font-semibold text-white">Document Preview</h3>
+        <span class="tag font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400">XIM-2026-045</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="flex bg-slate-800 rounded-lg p-0.5 text-xs">
+          <button onclick="switchDocTab('invoice')" id="dtab-invoice" class="px-3 py-1.5 rounded-md bg-indigo-600 text-white">Commercial Invoice</button>
+          <button onclick="switchDocTab('packing')" id="dtab-packing" class="px-3 py-1.5 rounded-md text-slate-400 hover:text-slate-300">Packing List</button>
+        </div>
+        <button onclick="closeDocPreview()" class="text-slate-500 hover:text-slate-300 text-xl leading-none">✕</button>
+      </div>
+    </div>
+    <div class="flex-1 overflow-auto p-6 bg-slate-900/50">
+      <!-- Invoice -->
+      <div id="doc-invoice" class="invoice-preview rounded-lg overflow-hidden shadow-2xl mx-auto" style="max-width:680px;padding:16px;">
+        <h2 style="text-align:center;font-size:14px;font-weight:700;margin-bottom:10px;letter-spacing:.05em;">COMMERCIAL INVOICE</h2>
+        <table>
+          <tr>
+            <td style="width:48%;vertical-align:top;padding:6px 8px;">
+              <b>Exporter</b><br/>XIMVERSE EXPORTS PVT LTD<br/>#45, Whitefield Industrial Area, Bengaluru – 560066<br/>IEC: XIMV1234567 | GSTIN: 29ABCDE1234F1Z5<br/>export@ximverse.com | +91-9876543210
+            </td>
+            <td style="vertical-align:top;padding:0;">
+              <table style="width:100%;border-collapse:collapse;">
+                <tr><td style="border-bottom:1px solid #000;border-right:1px solid #000;padding:3px 5px;font-size:8px;color:#555;">Pages</td><td style="border-bottom:1px solid #000;padding:3px 5px;text-align:right;font-size:8px;">1 of 1</td></tr>
+                <tr><td style="border-bottom:1px solid #000;border-right:1px solid #000;padding:3px 5px;font-size:8px;color:#555;">Invoice No & Date</td><td style="border-bottom:1px solid #000;padding:3px 5px;font-size:8px;"><b>XIM/EXP/2026/045</b><br/>19 April 2026</td></tr>
+                <tr><td style="border-bottom:1px solid #000;border-right:1px solid #000;padding:3px 5px;font-size:8px;color:#555;">B/L Number</td><td style="border-bottom:1px solid #000;padding:3px 5px;font-size:8px;">BLXIM456789</td></tr>
+                <tr><td style="border-right:1px solid #000;padding:3px 5px;font-size:8px;color:#555;">Reference</td><td style="padding:3px 5px;font-size:8px;">XIM-2026-045</td></tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="vertical-align:top;padding:6px 8px;"><b>Consignee</b><br/>Al Noor Food Trading LLC<br/>Warehouse No. 12, Al Aweer Market, Dubai, UAE<br/>+971-501234567 | procurement@alnoorfoods.ae</td>
+            <td style="vertical-align:top;padding:6px 8px;"><b>Buyer (If not Consignee)</b><br/>Al Noor Food Trading LLC, Dubai, UAE</td>
+          </tr>
+          <tr><td style="padding:3px 6px;font-size:8px;"><b>Method:</b> Sea Freight</td><td style="padding:3px 6px;font-size:8px;"><b>Shipment:</b> FCL &nbsp;|&nbsp; <b>Origin:</b> India &nbsp;|&nbsp; <b>Dest:</b> UAE</td></tr>
+          <tr><td style="padding:3px 6px;font-size:8px;"><b>Vessel:</b> MSC Valencia &nbsp;|&nbsp; <b>Voyage:</b> VY4587</td><td style="padding:3px 6px;font-size:8px;"><b>Payment:</b> LC at sight</td></tr>
+          <tr><td style="padding:3px 6px;font-size:8px;"><b>Loading:</b> Chennai Port &nbsp;|&nbsp; <b>Depart:</b> 25 Apr 2026</td><td style="padding:3px 6px;font-size:8px;"><b>Marine:</b> MARINE12345XIM &nbsp;|&nbsp; <b>LC:</b> LC2026UAE4587</td></tr>
+          <tr><td colspan="2" style="padding:3px 6px;font-size:8px;"><b>Discharge:</b> Jebel Ali Port &nbsp;|&nbsp; <b>Final:</b> Dubai Warehouse</td></tr>
+        </table>
+        <table style="margin-top:3px;">
+          <thead><tr><th class="hcell" style="width:13%">Product Code</th><th class="hcell" style="width:28%">Description</th><th class="hcell" style="width:11%">HS Code</th><th class="hcell" style="width:10%">Qty</th><th class="hcell" style="width:10%">Unit</th><th class="hcell" style="width:12%">Price</th><th class="hcell">Amount</th></tr></thead>
+          <tbody>
+            <tr><td>RICE-1121</td><td>Basmati Rice 1121 Steam</td><td>10063020</td><td>25</td><td>MT</td><td>USD 950</td><td>USD 23,750</td></tr>
+            <tr><td colspan="7" style="padding:10px;"></td></tr>
+            <tr><td colspan="5" style="text-align:right;font-size:8px;color:#555;">Total This Page</td><td colspan="2" style="font-weight:600;">USD 23,750</td></tr>
+            <tr><td colspan="5" style="text-align:right;font-size:8px;color:#555;">Consignment Total</td><td colspan="2" style="font-weight:700;">USD 23,750</td></tr>
+          </tbody>
+        </table>
+        <table style="margin-top:3px;">
+          <tr>
+            <td style="width:48%;vertical-align:top;padding:5px 7px;font-size:8px;"><b>Additional Info</b><br/>Quality: Premium | Moisture: Max 12% | Broken: Max 2%<br/>Inspection: SGS | Fumigation: Done</td>
+            <td style="vertical-align:top;padding:0;">
+              <table style="width:100%;border-collapse:collapse;">
+                <tr><td style="border-bottom:1px solid #000;padding:3px 5px;font-size:8px;"><b>TOTAL: USD 23,750</b></td><td style="border-bottom:1px solid #000;border-left:1px solid #000;padding:3px 5px;font-size:8px;">Currency: USD</td></tr>
+                <tr><td colspan="2" style="border-bottom:1px solid #000;padding:3px 5px;font-size:8px;">Incoterms® 2020: <b>CIF</b></td></tr>
+                <tr><td colspan="2" style="border-bottom:1px solid #000;padding:3px 5px;font-size:8px;">Signatory Co: XIMVERSE EXPORTS PVT LTD</td></tr>
+                <tr><td colspan="2" style="padding:3px 5px;font-size:8px;">Authorised: Ashutosh Rai (Export Manager)</td></tr>
+              </table>
+            </td>
+          </tr>
+          <tr><td style="padding:5px 7px;font-size:8px;vertical-align:top;"><b>Bank Details</b><br/>HDFC Bank, Whitefield | A/C: 50200012345678<br/>IFSC: HDFC0001234 | SWIFT: HDFCINBBXXX</td><td style="padding:20px 7px;font-size:8px;vertical-align:top;">Signature: ___________________</td></tr>
+        </table>
+      </div>
+      <!-- Packing List -->
+      <div id="doc-packing" class="hidden invoice-preview rounded-lg overflow-hidden shadow-2xl mx-auto" style="max-width:680px;padding:16px;">
+        <h2 style="text-align:center;font-size:14px;font-weight:700;margin-bottom:10px;letter-spacing:.05em;">PACKING LIST</h2>
+        <table>
+          <tr>
+            <td style="width:48%;vertical-align:top;padding:6px 8px;"><b>Exporter</b><br/>XIMVERSE EXPORTS PVT LTD<br/>#45, Whitefield Industrial Area, Bengaluru – 560066</td>
+            <td style="vertical-align:top;padding:0;">
+              <table style="width:100%;border-collapse:collapse;">
+                <tr><td style="border-bottom:1px solid #000;border-right:1px solid #000;padding:3px 5px;font-size:8px;color:#555;">Pages</td><td style="border-bottom:1px solid #000;padding:3px 5px;font-size:8px;text-align:right;">1 of 1</td></tr>
+                <tr><td style="border-bottom:1px solid #000;border-right:1px solid #000;padding:3px 5px;font-size:8px;color:#555;">Export Invoice No & Date</td><td style="border-bottom:1px solid #000;padding:3px 5px;font-size:8px;"><b>XIM/EXP/2026/045</b><br/>19 April 2026</td></tr>
+                <tr><td style="border-right:1px solid #000;padding:3px 5px;font-size:8px;color:#555;">B/L Number</td><td style="padding:3px 5px;font-size:8px;">BLXIM456789</td></tr>
+              </table>
+            </td>
+          </tr>
+          <tr><td style="vertical-align:top;padding:6px 8px;"><b>Consignee</b><br/>Al Noor Food Trading LLC<br/>Warehouse No. 12, Al Aweer Market, Dubai, UAE</td><td style="vertical-align:top;padding:6px 8px;"><b>Buyer (If not Consignee)</b><br/>Al Noor Food Trading LLC, Dubai, UAE</td></tr>
+          <tr><td style="padding:3px 6px;font-size:8px;"><b>Method:</b> Sea Freight</td><td style="padding:3px 6px;font-size:8px;"><b>Shipment:</b> FCL &nbsp;|&nbsp; <b>Origin:</b> India &nbsp;|&nbsp; <b>Dest:</b> UAE</td></tr>
+          <tr><td style="padding:3px 6px;font-size:8px;"><b>Vessel:</b> MSC Valencia &nbsp;|&nbsp; <b>Voyage:</b> VY4587</td><td style="padding:3px 6px;font-size:8px;"><b>Packing:</b> PP Bags (25kg) · 1000 Bags · 20ft · Seal: SEAL789456</td></tr>
+          <tr><td style="padding:3px 6px;font-size:8px;"><b>Loading:</b> Chennai &nbsp;|&nbsp; <b>Depart:</b> 25 Apr 2026</td><td style="padding:3px 6px;font-size:8px;"><b>Discharge:</b> Jebel Ali &nbsp;|&nbsp; <b>Final:</b> Dubai Warehouse</td></tr>
+        </table>
+        <table style="margin-top:3px;">
+          <thead><tr><th class="hcell" style="width:13%">Product Code</th><th class="hcell" style="width:28%">Description</th><th class="hcell" style="width:10%">Unit Qty</th><th class="hcell" style="width:18%">Kind & No of Packages</th><th class="hcell" style="width:12%">Net Wt (Kg)</th><th class="hcell" style="width:12%">Gross Wt (Kg)</th><th class="hcell">Vol (m³)</th></tr></thead>
+          <tbody>
+            <tr><td>RICE-1121</td><td>Basmati Rice 1121 Steam</td><td>25 MT</td><td>1000 Bags (25kg)</td><td>25,000</td><td>25,500</td><td>33</td></tr>
+            <tr><td colspan="7" style="padding:10px;"></td></tr>
+            <tr><td colspan="3" style="text-align:right;font-size:8px;color:#555;">Total This Page</td><td>1000 Bags</td><td>25,000 kg</td><td>25,500 kg</td><td>33 m³</td></tr>
+            <tr><td colspan="3" style="text-align:right;font-size:8px;color:#555;">Consignment Total</td><td style="font-weight:700;">1000 Bags</td><td style="font-weight:700;">25,000 kg</td><td style="font-weight:700;">25,500 kg</td><td style="font-weight:700;">33 m³</td></tr>
+          </tbody>
+        </table>
+        <table style="margin-top:3px;">
+          <tr>
+            <td style="width:48%;vertical-align:top;padding:5px 7px;font-size:8px;"><b>Additional Info</b><br/>Quality: Premium | Moisture: Max 12% | Broken: Max 2%<br/>Inspection: SGS | Fumigation: Done</td>
+            <td style="vertical-align:top;padding:0;">
+              <table style="width:100%;border-collapse:collapse;">
+                <tr><td style="border-bottom:1px solid #000;padding:3px 5px;font-size:8px;">Signatory Co: XIMVERSE EXPORTS PVT LTD</td></tr>
+                <tr><td style="border-bottom:1px solid #000;padding:3px 5px;font-size:8px;">Authorised: Ashutosh Rai (Export Manager)</td></tr>
+                <tr><td style="padding:18px 5px;font-size:8px;">Signature: ___________________</td></tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="p-4 border-t border-white/10 flex items-center justify-between">
+      <p class="text-xs text-slate-600">Generated 19 Apr 2026 · Stored in Supabase Storage</p>
+      <div class="flex gap-3">
+        <button onclick="closeDocPreview()" class="px-4 py-2 rounded-lg border border-white/10 text-sm text-slate-400 hover:text-slate-300 transition-colors">Close</button>
+        <button onclick="showToast('PDF downloaded')" class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm text-white transition-colors">↓ Download PDF</button>
+        <button onclick="showToast('ZIP downloaded — both documents');closeDocPreview()" class="px-4 py-2 rounded-lg btn-primary text-sm font-semibold text-white">↓ Download ZIP</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="hidden fixed bottom-6 right-6 z-[100] fade-in">
+  <div class="bg-emerald-500 text-white rounded-xl px-4 py-3 flex items-center gap-3 shadow-2xl">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+    <span id="toastMsg" class="text-sm font-medium">Done!</span>
+  </div>
+</div>
+
+<script>
+// ── Routing ──
+function goTo(pageId, authTab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  window.scrollTo(0,0);
+  if (authTab) switchAuthTab(authTab);
+}
+function demoLogin() { goTo('page-dashboard'); switchSection('profile'); }
+function doLogin() { goTo('page-dashboard'); switchSection('profile'); showToast('Welcome back!'); }
+
+// ── Auth tabs ──
+function switchAuthTab(tab) {
+  document.getElementById('form-login').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('form-signup').classList.toggle('hidden', tab !== 'signup');
+  document.getElementById('tab-login').className = 'auth-tab' + (tab==='login'?' active':'');
+  document.getElementById('tab-signup').className = 'auth-tab' + (tab==='signup'?' active':'');
+}
+
+// ── Dashboard nav ──
+const sections = ['profile','upload','create','history','news'];
+function switchSection(name) {
+  sections.forEach(s => {
+    document.getElementById('section-'+s).classList.toggle('hidden', s !== name);
+    const nav = document.getElementById('nav-'+s);
+    nav.className = 'nav-link' + (s === name ? ' active' : '');
+  });
+  window.scrollTo(0,0);
+}
+
+// ── Upload simulation ──
+let u1=false, u2=false;
+function simulateUpload(n) {
+  if (n===1 && u1) return;
+  if (n===2 && u2) return;
+  const zone = document.getElementById('uz'+n);
+  const idle = document.getElementById('up'+n+'-idle');
+  const prog = document.getElementById('up'+n+'-progress');
+  const result = document.getElementById('up'+n+'-result');
+  idle.style.display='none';
+  prog.classList.remove('hidden');
+  setTimeout(() => {
+    prog.classList.add('hidden');
+    result.classList.remove('hidden');
+    zone.classList.add('done');
+    zone.onclick = null;
+    if (n===1) u1=true; else u2=true;
+    if (u1 && u2) document.getElementById('uploadCTA').classList.remove('hidden');
+    showToast(n===1 ? 'Invoice data extracted via OCR' : 'Profile saved to Supabase');
+  }, 2400);
+}
+function toggleJsonView(n) {
+  const box = document.getElementById('json'+n);
+  const arrow = document.getElementById('jarrow'+n);
+  box.classList.toggle('hidden');
+  arrow.style.transform = box.classList.contains('hidden') ? '' : 'rotate(90deg)';
+}
+
+// ── Create flow ──
+function startGenerate() {
+  document.getElementById('cs-step1').classList.add('hidden');
+  document.getElementById('cs-step2').classList.remove('hidden');
+  // Step dots
+  document.getElementById('step2-dot').className = 'step-dot btn-primary text-white text-xs';
+  document.getElementById('step2-label').className = 'text-sm font-medium text-white';
+
+  const bar = document.getElementById('cs-bar');
+  const sub = document.getElementById('cs-sub');
+  const pct = document.getElementById('cs-pct');
+  const steps = [
+    [20,'Filling Commercial Invoice template...'],
+    [45,'Filling Packing List template...'],
+    [70,'Rendering PDFs client-side...'],
+    [90,'Saving to Supabase Storage...'],
+    [100,'Done!'],
+  ];
+  let i=0;
+  const iv = setInterval(() => {
+    if (i < steps.length) {
+      bar.style.width = steps[i][0]+'%';
+      sub.textContent = steps[i][1];
+      pct.textContent = steps[i][0]+'%';
+      i++;
+    } else {
+      clearInterval(iv);
+      document.getElementById('cs-spinner').classList.add('hidden');
+      document.getElementById('cs-check').classList.remove('hidden');
+      document.getElementById('cs-title').textContent = 'Documents Ready!';
+      document.getElementById('cs-title').className = 'font-bold text-lg text-emerald-400';
+      setTimeout(() => {
+        document.getElementById('cs-step2').classList.add('hidden');
+        document.getElementById('cs-step3').classList.remove('hidden');
+        document.getElementById('step3-dot').className = 'step-dot btn-primary text-white text-xs';
+        document.getElementById('step3-label').className = 'text-sm font-medium text-white';
+        showToast('Consignment XIM-2026-045 created!');
+      }, 800);
+    }
+  }, 550);
+}
+
+// ── PDF Preview ──
+function openDocPreview(tab) {
+  document.getElementById('previewModal').classList.remove('hidden');
+  switchDocTab(tab);
+}
+function closeDocPreview() { document.getElementById('previewModal').classList.add('hidden'); }
+function switchDocTab(tab) {
+  document.getElementById('doc-invoice').classList.toggle('hidden', tab !== 'invoice');
+  document.getElementById('doc-packing').classList.toggle('hidden', tab !== 'packing');
+  document.getElementById('dtab-invoice').className = 'px-3 py-1.5 rounded-md transition-all ' + (tab==='invoice' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-300');
+  document.getElementById('dtab-packing').className = 'px-3 py-1.5 rounded-md transition-all ' + (tab==='packing' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-300');
+}
+
+// ── Toast ──
+let toastTimer;
+function showToast(msg) {
+  clearTimeout(toastTimer);
+  document.getElementById('toastMsg').textContent = msg;
+  document.getElementById('toast').classList.remove('hidden');
+  toastTimer = setTimeout(() => document.getElementById('toast').classList.add('hidden'), 3000);
+}
+
+// Close modal on backdrop
+document.getElementById('previewModal').addEventListener('click', function(e){
+  if(e.target === this) closeDocPreview();
+});
+</script>
+</body>
+</html>

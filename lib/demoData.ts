@@ -1,0 +1,128 @@
+import type { Profile, Consignment, InvoiceJson } from '@/types'
+
+export const DEMO_USER_ID = 'demo-user-local'
+
+export const DEMO_PROFILE: Profile = {
+  id: 'demo-profile-1',
+  user_id: DEMO_USER_ID,
+  company_name: 'XIMVERSE EXPORTS PVT LTD',
+  email: 'export@ximverse.com',
+  phone: '+91-9876543210',
+  address: '#45, Whitefield Industrial Area, Bengaluru, Karnataka, India – 560066',
+  iec: 'XIMV1234567',
+  gstin: '29ABCDE1234F1Z5',
+  pan: 'ABCDE1234F',
+  tan: 'BLRA12345B',
+  export_commodity: 'Basmati Rice 1121 Steam',
+  signatory_name: 'Ashutosh Rai',
+  signatory_designation: 'Export Manager',
+  bank_name: 'HDFC Bank Ltd',
+  bank_branch: 'Whitefield Branch',
+  bank_account: '50200012345678',
+  bank_ifsc: 'HDFC0001234',
+  bank_swift: 'HDFCINBBXXX',
+  created_at: '2026-01-01T00:00:00Z',
+  updated_at: '2026-01-01T00:00:00Z',
+}
+
+export const DEMO_SOURCE_JSON: InvoiceJson = {
+  exporter: {
+    company: 'XIMVERSE EXPORTS PVT LTD',
+    address: '#45, Whitefield Industrial Area, Bengaluru, Karnataka, India – 560066',
+    iec: 'XIMV1234567',
+    gstin: '29ABCDE1234F1Z5',
+    email: 'export@ximverse.com',
+    phone: '+91-9876543210',
+  },
+  consignee: {
+    name: 'Al Noor Food Trading LLC',
+    address: 'Warehouse No. 12, Al Aweer Market, Dubai, UAE',
+    phone: '+971-501234567',
+    email: 'procurement@alnoorfoods.ae',
+  },
+  shipment: {
+    invoice_no: 'XIM/EXP/2026/045',
+    invoice_date: '19 April 2026',
+    bl_no: 'BLXIM456789',
+    buyer_ref: 'ANFT-RICE-APR26',
+    dispatch_mode: 'Sea Freight',
+    shipment_type: 'FCL',
+    origin: 'India',
+    destination: 'UAE',
+    vessel: 'MSC Valencia',
+    voyage: 'VY4587',
+    port_of_loading: 'Chennai Port',
+    departure_date: '25 April 2026',
+    port_of_discharge: 'Jebel Ali Port',
+    final_destination: 'Dubai Warehouse',
+  },
+  payment: {
+    terms: 'LC at sight',
+    lc_no: 'LC2026UAE4587',
+    insurance: 'MARINE12345XIM',
+    incoterm: 'CIF',
+    currency: 'USD',
+  },
+  items: [{
+    product_code: 'RICE-1121',
+    description: 'Basmati Rice 1121 Steam',
+    hs_code: '10063020',
+    unit: 'MT',
+    qty: 25,
+    unit_price: 950,
+    amount: 23750,
+  }],
+  total_amount: 23750,
+  packing: [{
+    product_code: 'RICE-1121',
+    description: 'Basmati Rice 1121 Steam',
+    unit: 'MT',
+    qty: 25,
+    packages: '1000 Bags (25kg)',
+    net_kg: 25000,
+    gross_kg: 25500,
+    volume_cbm: 33,
+  }],
+  packing_info: {
+    bag_type: 'PP Bags (25kg)',
+    total_bags: 1000,
+    container_size: '20ft',
+    seal_no: 'SEAL789456',
+  },
+  bank: {
+    name: 'HDFC Bank Ltd',
+    branch: 'Whitefield Branch',
+    account_no: '50200012345678',
+    ifsc: 'HDFC0001234',
+    swift: 'HDFCINBBXXX',
+  },
+  quality: {
+    grade: 'Premium',
+    moisture_max: '12%',
+    broken_max: '2%',
+    inspection: 'SGS',
+    fumigation: 'Done',
+  },
+  signatory: { name: 'Ashutosh Rai', designation: 'Export Manager' },
+}
+
+export const DEMO_CONSIGNMENTS: Consignment[] = [
+  {
+    id: 'demo-c-1', user_id: DEMO_USER_ID, consignment_no: 'XIM-2026-042',
+    buyer_name: 'Gulf Grain Trading LLC', product: 'Basmati Rice 1121', quantity: 33, unit: 'MT',
+    amount: 31200, currency: 'USD', status: 'downloaded', source_json: DEMO_SOURCE_JSON,
+    created_at: '2026-04-12T10:00:00Z', updated_at: '2026-04-12T10:00:00Z',
+  },
+  {
+    id: 'demo-c-2', user_id: DEMO_USER_ID, consignment_no: 'XIM-2026-038',
+    buyer_name: 'Al Noor Food Trading LLC', product: 'Basmati Rice 1121', quantity: 25, unit: 'MT',
+    amount: 23750, currency: 'USD', status: 'generated', source_json: DEMO_SOURCE_JSON,
+    created_at: '2026-04-05T10:00:00Z', updated_at: '2026-04-05T10:00:00Z',
+  },
+  {
+    id: 'demo-c-3', user_id: DEMO_USER_ID, consignment_no: 'XIM-2026-031',
+    buyer_name: 'Dubai Spice Traders', product: 'Sella Basmati Rice', quantity: 20, unit: 'MT',
+    amount: 18400, currency: 'USD', status: 'draft', source_json: DEMO_SOURCE_JSON,
+    created_at: '2026-03-28T10:00:00Z', updated_at: '2026-03-28T10:00:00Z',
+  },
+]
