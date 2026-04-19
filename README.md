@@ -1,6 +1,10 @@
 # XIMVERSE
 
-> **Export documentation in minutes, not days.** Upload PDFs → OCR extracts data → templates auto-filled → download customs-ready Commercial Invoice + Packing List.
+> **India's only self-serve CBEC-format export documentation engine.**
+> Fills Commercial Invoice + Packing List from your existing PDFs in under 2 minutes — no CHA, no re-typing.
+> Built for the 63M MSMEs the ₹15,000-per-shipment documentation industry doesn't want to automate.
+>
+> Primary OCR: OCR.space. Fallback: **Tesseract.js + pdf.js (WebAssembly)** — runs in-browser when quota runs out, no API key needed.
 
 [![BITS Pilani Startup Hub](https://img.shields.io/badge/Incubated-BITS%20Pilani%20Startup%20Hub-blue)]()
 [![Pilot: Deendayal Port](https://img.shields.io/badge/Pilot-Deendayal%20Port-orange)]()
@@ -58,6 +62,18 @@ The current codebase is the **core automation engine** powering the pilot:
 - ✅ Download customs-ready Commercial Invoice + Packing List as a ZIP
 - ✅ Consignment history with re-download
 - ✅ Trade insights panel (currency, port alerts, export trends)
+
+---
+
+## 🆚 Why Not [Docparser / Nanonets / ImpEx / generic doc tools]?
+
+| The competition | XIMVERSE |
+|-----------------|----------|
+| Generic document automation — works for any country, any format | **India-specific** — CBEC format with IEC, GSTIN, Shipping Bill, HS code fields pre-wired |
+| LLM-based extraction — expensive per request, hallucinates field values | **Deterministic regex** anchored to fixed labels — free, instant, never hallucinates a bank account number |
+| API-dependent OCR — platform goes down, quota runs out, your product breaks | **WebAssembly fallback** (Tesseract.js + pdf.js in-browser) — zero dependency on any external API when it matters |
+| Enterprise SaaS priced for freight forwarders | **MSME-first** — free tier, demo user bypass, no signup friction. Built for a first-time exporter in Surat, not a CHA's back office |
+| English-only, global market focus | **Tier-2/3 India focus** — Deendayal Port pilot, DPDP Act compliance, FIEO/APEDA partnership roadmap |
 
 ---
 
