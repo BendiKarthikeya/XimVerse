@@ -58,7 +58,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Logo — left */}
         <Link href="/" className="flex items-center flex-none">
           <div className="bg-white rounded-lg px-2 py-0.5">
-            <img src="/logo.png" alt="XimVerse" className="h-7 w-auto object-contain" />
+            <img src="/logo.png" alt="XimVerse" className="h-10 w-20" />
           </div>
         </Link>
 

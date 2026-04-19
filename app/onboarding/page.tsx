@@ -103,7 +103,7 @@ export default function OnboardingPage() {
         {/* Header */}
         <div className="text-center space-y-2">
           <div className="inline-block bg-white rounded-lg px-2 py-0.5 mb-4">
-            <img src="/logo.png" alt="XimVerse" className="h-7 w-auto object-contain" />
+            <img src="/logo.png" alt="XimVerse" className="h-10 w-20" />
           </div>
           <h1 className="text-2xl font-black text-white">Set up your Company Profile</h1>
           <p className="text-sm text-slate-400">

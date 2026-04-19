@@ -8,7 +8,7 @@ export default function LandingPage() {
         style={{ background: 'rgba(15,23,42,0.92)', backdropFilter: 'blur(14px)' }}>
         <div className="flex items-center gap-3">
           <div className="bg-white rounded-lg px-2 py-0.5">
-            <img src="/logo.png" alt="XimVerse" className="h-7 w-auto object-contain" />
+            <img src="/logo.png" alt="XimVerse" className="h-10 w-20" />
           </div>
         </div>
         <div className="flex items-center gap-3">

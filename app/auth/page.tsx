@@ -59,7 +59,7 @@ function AuthForm() {
         </div>
         <div className="relative z-10">
           <div className="bg-white rounded-lg px-2 py-0.5 inline-block">
-            <img src="/logo.png" alt="XimVerse" className="h-7 w-auto object-contain" />
+            <img src="/logo.png" alt="XimVerse" className="h-10 w-20" />
           </div>
         </div>
         <div className="space-y-6 relative z-10">
@@ -101,7 +101,7 @@ function AuthForm() {
           <div>
             <div className="mb-6">
               <div className="bg-white rounded-lg px-2 py-0.5 inline-block">
-                <img src="/logo.png" alt="XimVerse" className="h-7 w-auto object-contain" />
+                <img src="/logo.png" alt="XimVerse" className="h-10 w-32" />
               </div>
             </div>
 
