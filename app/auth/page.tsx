@@ -51,10 +51,10 @@ function AuthForm() {
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div style={{ width: 500, height: 500, background: 'radial-gradient(circle,rgba(99,102,241,0.2) 0%,transparent 70%)', borderRadius: '50%' }} />
         </div>
-        <div className="flex items-center gap-3 relative z-10">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm text-white"
-            style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}>X</div>
-          <span className="font-bold text-lg tracking-tight text-white">XIMVERSE</span>
+        <div className="relative z-10">
+          <div className="bg-white rounded-lg px-2 py-0.5 inline-block">
+            <img src="/logo.png" alt="XimVerse" className="h-7 w-auto object-contain" />
+          </div>
         </div>
         <div className="space-y-6 relative z-10">
           <div>
@@ -93,10 +93,10 @@ function AuthForm() {
           </Link>
 
           <div>
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs text-white"
-                style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}>X</div>
-              <span className="font-bold text-base text-white">XIMVERSE</span>
+            <div className="mb-6">
+              <div className="bg-white rounded-lg px-2 py-0.5 inline-block">
+                <img src="/logo.png" alt="XimVerse" className="h-7 w-auto object-contain" />
+              </div>
             </div>
 
             {/* Tabs */}

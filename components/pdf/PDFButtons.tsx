@@ -1,26 +1,9 @@
 'use client'
 
-import dynamic from 'next/dynamic'
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer'
+import CommercialInvoicePDF from './CommercialInvoicePDF'
+import PackingListPDF from './PackingListPDF'
 import type { Profile, InvoiceJson } from '@/types'
-
-const PDFDownloadLink = dynamic(
-  () => import('@react-pdf/renderer').then(m => ({ default: m.PDFDownloadLink })),
-  { ssr: false, loading: () => <span className="text-xs text-slate-500">Loading…</span> }
-)
-const PDFViewer = dynamic(
-  () => import('@react-pdf/renderer').then(m => ({ default: m.PDFViewer })),
-  { ssr: false, loading: () => <div className="text-xs text-slate-500">Loading preview…</div> }
-)
-
-const CommercialInvoicePDF = dynamic(() => import('./CommercialInvoicePDF'), { ssr: false })
-const PackingListPDF = dynamic(() => import('./PackingListPDF'), { ssr: false })
-
-interface Props {
-  profile: Partial<Profile>
-  sourceJson: InvoiceJson
-  consignmentNo: string
-  mode: 'download-invoice' | 'download-packing' | 'download-zip' | 'preview-invoice' | 'preview-packing'
-}
 
 export function PDFDownloadBtn({ profile, sourceJson, consignmentNo, type, label }: {
   profile: Partial<Profile>; sourceJson: InvoiceJson; consignmentNo: string

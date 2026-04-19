@@ -44,10 +44,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <header className="border-b border-white/10 px-6 py-3 flex items-center justify-between sticky top-0 z-20"
         style={{ background: 'rgba(15,23,42,0.96)', backdropFilter: 'blur(14px)' }}>
         <div className="flex items-center gap-4">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs text-white"
-              style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}>X</div>
-            <span className="font-bold text-base tracking-tight text-white">XIMVERSE</span>
+          <Link href="/" className="flex items-center">
+            <div className="bg-white rounded-lg px-2 py-0.5">
+              <img src="/logo.png" alt="XimVerse" className="h-7 w-auto object-contain" />
+            </div>
           </Link>
           <nav className="flex items-center gap-1 ml-4">
             {NAV.map(({ href, label }) => {

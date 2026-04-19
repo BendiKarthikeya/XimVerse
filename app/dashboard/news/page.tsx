@@ -1,66 +1,172 @@
-const NEWS = [
-  { tag: 'Featured · Trade Policy', tagColor: '99,102,241', title: 'India–UAE CEPA: Basmati rice zero-duty extended through 2027', body: 'The Comprehensive Economic Partnership Agreement between India and UAE has extended the zero-duty status for Basmati rice exports through December 2027, benefiting exporters shipping via CIF terms.', source: 'APEDA', impact: 'High for Basmati exporters', time: '2 hrs ago', featured: true },
-  { tag: 'Currency', tagColor: '59,130,246', title: 'USD/INR at 83.42 — Rupee firms', body: 'RBI intervention steadies the rupee ahead of quarterly review. Exporters advised to monitor LC settlements.', source: 'RBI', time: '2 hrs ago' },
-  { tag: 'Shipping', tagColor: '249,115,22', title: 'Jebel Ali Terminal 2 Congestion', body: 'FCL shipments experiencing 3–5 day delays at Jebel Ali Port Terminal 2. Plan departure dates accordingly.', source: 'DP World', time: '5 hrs ago' },
-  { tag: 'Compliance', tagColor: '168,85,247', title: 'New Phytosanitary Format — May 2026', body: 'APEDA mandates updated phytosanitary certificate format from 1 May 2026 for all rice exports to UAE.', source: 'APEDA', time: '1 day ago' },
-  { tag: 'Trade', tagColor: '34,197,94', title: 'Chennai Port adds 3 new FCL berths', body: 'Chennai Port Authority inaugurates 3 new FCL berths, reducing turnaround time by 30% for exporters.', source: 'Chennai Port', time: '2 days ago' },
-  { tag: 'Rates', tagColor: '234,179,8', title: 'Basmati FOB price: $930–960/MT', body: '1121 Steam Basmati prices steady at $930–960 per MT FOB. Demand from Middle East remains strong.', source: 'DGCI&S', time: '3 days ago' },
-  { tag: 'Alert', tagColor: '239,68,68', title: 'SGS inspection backlog — 4 day delay', body: 'SGS Bengaluru reporting 4-day inspection backlog. Book slots early to avoid departure delays.', source: 'SGS India', time: '4 days ago' },
+'use client'
+import { useEffect, useState } from 'react'
+
+interface Article {
+  title: string
+  body: string
+  source: string
+  url: string
+  time: string
+  tag: string
+  tagColor: string
+  image: string | null
+}
+
+const TABS = [
+  { id: 'all',     label: 'All'           },
+  { id: 'ocean',   label: 'Ocean Freight' },
+  { id: 'air',     label: 'Air Cargo'     },
+  { id: 'trade',   label: 'Trade Policy'  },
+  { id: 'india',   label: 'India'         },
+  { id: 'uae',     label: 'UAE'           },
+  { id: 'customs', label: 'Customs & Docs'},
 ]
 
 export default function NewsPage() {
-  const [featured, ...rest] = NEWS
+  const [articles, setArticles]     = useState<Article[]>([])
+  const [loading, setLoading]       = useState(true)
+  const [activeTab, setActiveTab]   = useState('all')
+  const [isFallback, setIsFallback] = useState(false)
+
+  useEffect(() => {
+    setLoading(true)
+    setArticles([])
+    fetch(`/api/news?topic=${activeTab}&page=1`)
+      .then(r => r.json())
+      .then(data => {
+        setArticles(data.articles ?? [])
+        setIsFallback(data.fallback ?? false)
+      })
+      .catch(() => setArticles([]))
+      .finally(() => setLoading(false))
+  }, [activeTab])
+
+  const [featured, ...rest] = articles
 
   return (
     <div className="space-y-6 fade-in">
-      <div>
-        <h1 className="text-2xl font-bold text-white">Trade News & Updates</h1>
-        <p className="text-sm text-slate-500 mt-1">Stay updated with export regulations, shipping alerts, and currency changes.</p>
+
+      {/* Header */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Trade News & Updates</h1>
+          <p className="text-sm text-slate-500 mt-1">Stay updated with export regulations, shipping alerts, and market intelligence.</p>
+        </div>
+        {isFallback && (
+          <span className="text-xs text-amber-500/70 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded-lg shrink-0">
+            Demo data · Live API unavailable
+          </span>
+        )}
       </div>
 
-      {/* Category pills */}
-      <div className="flex gap-2 flex-wrap">
-        {['All', 'Currency', 'Shipping', 'Trade Policy', 'Compliance'].map((c, i) => (
-          <button key={c} className="text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border transition-all"
-            style={i === 0
+      {/* Topic tabs */}
+      <div className="flex gap-2 flex-wrap border-b pb-4" style={{ borderColor: 'rgba(255,255,255,0.07)' }}>
+        {TABS.map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className="text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border transition-all"
+            style={tab.id === activeTab
               ? { background: 'rgba(99,102,241,0.2)', color: '#a5b4fc', borderColor: 'rgba(99,102,241,0.3)' }
-              : { background: 'rgba(255,255,255,0.04)', color: '#64748b', borderColor: 'rgba(255,255,255,0.08)' }}>
-            {c}
+              : { background: 'rgba(255,255,255,0.04)', color: '#64748b', borderColor: 'rgba(255,255,255,0.08)' }}
+          >
+            {tab.label}
           </button>
         ))}
       </div>
 
-      {/* Featured */}
-      <div className="rounded-2xl p-6 space-y-3 border"
-        style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(99,102,241,0.25)' }}>
-        <div className="flex items-start justify-between">
-          <span className="text-xs font-bold uppercase tracking-widest px-2 py-1 rounded-full"
-            style={{ background: 'rgba(99,102,241,0.2)', color: '#a5b4fc' }}>{featured.tag}</span>
-          <span className="text-xs text-slate-600">{featured.time}</span>
+      {/* Loading */}
+      {loading && (
+        <div className="flex flex-col items-center justify-center py-20 gap-3">
+          <div className="w-8 h-8 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin" />
+          <p className="text-sm text-slate-500">Fetching latest trade news…</p>
         </div>
-        <h3 className="text-lg font-bold text-white">{featured.title}</h3>
-        <p className="text-sm text-slate-400 leading-relaxed">{featured.body}</p>
-        <div className="flex items-center gap-2 text-xs text-slate-600">
-          <span>Source: {featured.source}</span><span>·</span><span>Impact: {featured.impact}</span>
-        </div>
-      </div>
+      )}
 
-      {/* Grid */}
-      <div className="grid grid-cols-3 gap-4">
-        {rest.map(({ tag, tagColor, title, body, source, time }) => (
-          <div key={title} className="rounded-xl p-5 space-y-3 border border-white/7 cursor-pointer transition-all hover:-translate-y-1"
-            style={{ background: 'rgba(255,255,255,0.03)' }}>
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-widest px-2 py-0.5 rounded"
-                style={{ background: `rgba(${tagColor},0.15)`, color: `rgb(${tagColor})` }}>{tag}</span>
-              <span className="text-xs text-slate-600">{time}</span>
+      {/* Empty */}
+      {!loading && articles.length === 0 && (
+        <div className="rounded-xl p-8 border border-white/7 text-center">
+          <p className="text-sm text-slate-500">No articles found. Try another tab.</p>
+        </div>
+      )}
+
+      {/* Featured card */}
+      {!loading && featured && (
+        <a
+          href={featured.url}
+          target={featured.url !== '#' ? '_blank' : '_self'}
+          rel="noopener noreferrer"
+          className="block rounded-2xl overflow-hidden border transition-all hover:border-indigo-500/40"
+          style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(99,102,241,0.25)' }}
+        >
+          {featured.image && (
+            <img
+              src={featured.image}
+              alt={featured.title}
+              className="w-full h-52 object-cover"
+              onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+            />
+          )}
+          <div className="p-6 space-y-3">
+            <div className="flex items-start justify-between gap-4">
+              <span
+                className="text-xs font-bold uppercase tracking-widest px-2 py-1 rounded-full shrink-0"
+                style={{ background: `rgba(${featured.tagColor},0.2)`, color: `rgb(${featured.tagColor})` }}
+              >
+                {featured.tag}
+              </span>
+              <span className="text-xs text-slate-600">{featured.time}</span>
             </div>
-            <p className="font-semibold text-sm text-white">{title}</p>
-            <p className="text-xs text-slate-500 leading-relaxed">{body}</p>
-            <p className="text-xs text-slate-700">Source: {source}</p>
+            <h3 className="text-lg font-bold text-white leading-snug">{featured.title}</h3>
+            <p className="text-sm text-slate-400 leading-relaxed">{featured.body}</p>
+            <p className="text-xs text-slate-600">Source: {featured.source}</p>
           </div>
-        ))}
-      </div>
+        </a>
+      )}
+
+      {/* Article grid */}
+      {!loading && rest.length > 0 && (
+        <div className="grid grid-cols-3 gap-4">
+          {rest.map((article, i) => (
+            <a
+              key={`${article.url}-${i}`}
+              href={article.url}
+              target={article.url !== '#' ? '_blank' : '_self'}
+              rel="noopener noreferrer"
+              className="rounded-xl overflow-hidden border border-white/7 cursor-pointer transition-all hover:-translate-y-1 flex flex-col"
+              style={{ background: 'rgba(255,255,255,0.03)' }}
+            >
+              {article.image ? (
+                <img
+                  src={article.image}
+                  alt={article.title}
+                  className="w-full h-36 object-cover"
+                  onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+                />
+              ) : (
+                <div className="w-full h-36 flex items-center justify-center" style={{ background: `rgba(${article.tagColor},0.06)` }}>
+                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: `rgba(${article.tagColor},0.4)` }}>{article.tag}</span>
+                </div>
+              )}
+              <div className="p-4 space-y-2 flex-1 flex flex-col">
+                <div className="flex items-center justify-between gap-2">
+                  <span
+                    className="text-xs font-bold uppercase tracking-widest px-2 py-0.5 rounded shrink-0"
+                    style={{ background: `rgba(${article.tagColor},0.15)`, color: `rgb(${article.tagColor})` }}
+                  >
+                    {article.tag}
+                  </span>
+                  <span className="text-xs text-slate-600 shrink-0">{article.time}</span>
+                </div>
+                <p className="font-semibold text-sm text-white leading-snug">{article.title}</p>
+                <p className="text-xs text-slate-500 leading-relaxed line-clamp-2 flex-1">{article.body}</p>
+                <p className="text-xs text-slate-700">Source: {article.source}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+
     </div>
   )
 }
