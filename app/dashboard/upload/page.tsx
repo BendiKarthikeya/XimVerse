@@ -57,20 +57,29 @@ export default function UploadPage() {
 
       const { data: urlData } = supabase.storage.from('source-documents').getPublicUrl(path)
 
-      // OCR directly from browser — avoids Vercel serverless timeout
-      const ocrForm = new FormData()
-      ocrForm.append('file', file)
-      ocrForm.append('apikey', process.env.NEXT_PUBLIC_OCR_SPACE_API_KEY || 'helloworld')
-      ocrForm.append('language', 'eng')
-      ocrForm.append('isOverlayRequired', 'false')
-      ocrForm.append('detectOrientation', 'true')
-      ocrForm.append('scale', 'true')
-      ocrForm.append('OCREngine', '1')
-      const ocrRes = await fetch('https://api.ocr.space/parse/image', { method: 'POST', body: ocrForm })
-      if (!ocrRes.ok) throw new Error(`OCR service error: ${ocrRes.status}`)
-      const ocrData = await ocrRes.json()
-      if (ocrData.IsErroredOnProcessing) throw new Error(ocrData.ErrorMessage?.[0] ?? 'OCR failed')
-      const rawText: string = ocrData.ParsedResults?.map((r: { ParsedText: string }) => r.ParsedText).join('\n') ?? ''
+      // Primary: OCR.space (browser-direct to avoid Vercel 10s timeout)
+      // Fallback: Tesseract.js WebAssembly pipeline when OCR.space quota is exhausted
+      let rawText: string
+      try {
+        const ocrForm = new FormData()
+        ocrForm.append('file', file)
+        ocrForm.append('apikey', process.env.NEXT_PUBLIC_OCR_SPACE_API_KEY || 'helloworld')
+        ocrForm.append('language', 'eng')
+        ocrForm.append('isOverlayRequired', 'false')
+        ocrForm.append('detectOrientation', 'true')
+        ocrForm.append('scale', 'true')
+        ocrForm.append('OCREngine', '1')
+        const ocrRes = await fetch('https://api.ocr.space/parse/image', { method: 'POST', body: ocrForm })
+        if (!ocrRes.ok) throw new Error(`OCR.space error: ${ocrRes.status}`)
+        const ocrData = await ocrRes.json()
+        if (ocrData.IsErroredOnProcessing) throw new Error(ocrData.ErrorMessage?.[0] ?? 'OCR failed')
+        rawText = ocrData.ParsedResults?.map((r: { ParsedText: string }) => r.ParsedText).join('\n') ?? ''
+        if (!rawText.trim()) throw new Error('OCR.space returned empty text')
+      } catch {
+        // OCR.space failed — fall back to client-side WebAssembly pipeline (pdf.js + Tesseract.js)
+        const { extractTextWithWasm } = await import('@/lib/ocrFallback')
+        rawText = await extractTextWithWasm(file)
+      }
       const parsed = docType === 'company_profile' ? parseProfileText(rawText) : parseInvoiceText(rawText)
 
       // Save to DB

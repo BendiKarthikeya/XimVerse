@@ -6,35 +6,35 @@ import { parseInvoiceText, parseProfileText } from '../parseOcrText'
 describe('parseInvoiceText', () => {
   it('returns fallback data when given empty string', () => {
     const result = parseInvoiceText('')
-    expect(result.exporter.company).toBe('XIMVERSE EXPORTS PVT LTD')
-    expect(result.shipment.origin).toBe('India')
-    expect(result.payment.currency).toBe('USD')
-    expect(result.items.length).toBeGreaterThan(0)
+    expect(result.exporter?.company).toBe('XIMVERSE EXPORTS PVT LTD')
+    expect(result.shipment?.origin).toBe('India')
+    expect(result.payment?.currency).toBe('USD')
+    expect(result.items?.length).toBeGreaterThan(0)
   })
 
   it('extracts invoice_no from labelled text', () => {
     const text = 'Invoice No: XIM/EXP/2026/099\nDate: 20 April 2026'
     const result = parseInvoiceText(text)
-    expect(result.shipment.invoice_no).toBe('XIM/EXP/2026/099')
+    expect(result.shipment?.invoice_no).toBe('XIM/EXP/2026/099')
   })
 
   it('extracts invoice date', () => {
     const text = 'Invoice No: TEST-001\nDate: 15 March 2026'
     const result = parseInvoiceText(text)
-    expect(result.shipment.invoice_date).toBe('15 March 2026')
+    expect(result.shipment?.invoice_date).toBe('15 March 2026')
   })
 
   it('extracts BL number', () => {
     const text = 'B/L No: BLTEST987654'
     const result = parseInvoiceText(text)
-    expect(result.shipment.bl_no).toBe('BLTEST987654')
+    expect(result.shipment?.bl_no).toBe('BLTEST987654')
   })
 
   it('extracts shipment origin and destination', () => {
     const text = 'Origin: India\nDestination: Singapore'
     const result = parseInvoiceText(text)
-    expect(result.shipment.origin).toBe('India')
-    expect(result.shipment.destination).toBe('Singapore')
+    expect(result.shipment?.origin).toBe('India')
+    expect(result.shipment?.destination).toBe('Singapore')
   })
 
   it('extracts total amount from text', () => {
@@ -46,33 +46,33 @@ describe('parseInvoiceText', () => {
   it('extracts incoterm and currency', () => {
     const text = 'Incoterm: FOB\nCurrency: EUR'
     const result = parseInvoiceText(text)
-    expect(result.payment.incoterm).toBe('FOB')
-    expect(result.payment.currency).toBe('EUR')
+    expect(result.payment?.incoterm).toBe('FOB')
+    expect(result.payment?.currency).toBe('EUR')
   })
 
   it('extracts LC number', () => {
     const text = 'LC No: LC2026SG9999'
     const result = parseInvoiceText(text)
-    expect(result.payment.lc_no).toBe('LC2026SG9999')
+    expect(result.payment?.lc_no).toBe('LC2026SG9999')
   })
 
   it('extracts port of loading', () => {
     const text = 'Loading: Nhava Sheva Port'
     const result = parseInvoiceText(text)
-    expect(result.shipment.port_of_loading).toBe('Nhava Sheva Port')
+    expect(result.shipment?.port_of_loading).toBe('Nhava Sheva Port')
   })
 
   it('extracts vessel and voyage', () => {
     const text = 'Vessel: MSC Oscar\nVoyage: VY9001'
     const result = parseInvoiceText(text)
-    expect(result.shipment.vessel).toBe('MSC Oscar')
-    expect(result.shipment.voyage).toBe('VY9001')
+    expect(result.shipment?.vessel).toBe('MSC Oscar')
+    expect(result.shipment?.voyage).toBe('VY9001')
   })
 
   it('falls back to fallback items when no item rows match', () => {
     const result = parseInvoiceText('some unstructured text with no table')
-    expect(result.items[0].product_code).toBeDefined()
-    expect(result.items[0].qty).toBeGreaterThan(0)
+    expect(result.items?.[0]?.product_code).toBeDefined()
+    expect(result.items?.[0]?.qty).toBeGreaterThan(0)
   })
 
   it('returns structured object with all top-level keys', () => {
@@ -134,8 +134,8 @@ describe('parseProfileText', () => {
   it('extracts signatory from Authorized Signatory block', () => {
     const text = 'Authorized Signatory\nRajesh Kumar\nExport Manager'
     const result = parseProfileText(text)
-    expect(result.signatory.name).toBe('Rajesh Kumar')
-    expect(result.signatory.designation).toBe('Export Manager')
+    expect(result.signatory?.name).toBe('Rajesh Kumar')
+    expect(result.signatory?.designation).toBe('Export Manager')
   })
 
   it('returns structured object with all top-level keys', () => {

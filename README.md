@@ -63,6 +63,17 @@ The current codebase is the **core automation engine** powering the pilot:
 
 ## 🏗️ Tech Stack
 
+### Novel Engineering Decisions
+
+| Decision | Why |
+|----------|-----|
+| **WebAssembly OCR fallback** | When OCR.space quota is exhausted, we fall back to a client-side WASM pipeline: `pdfjs-dist` renders PDF pages to `<canvas>`, then `Tesseract.js` (WebAssembly) extracts text. Zero server round-trip, zero API key, zero quota. |
+| **Regex over LLM** | Trade docs have fixed, labeled fields. Regex is free, instant, and deterministic — no hallucination risk on IEC/GSTIN/bank fields. LLM was prototyped and dropped. |
+| **Browser-direct OCR** | OCR.space is called from the browser, not the server. We discovered Vercel's 10s serverless timeout was killing extractions on larger PDFs — moving it client-side eliminated the failure entirely. |
+| **Supabase over custom backend** | Auth + DB + storage in one, letting us focus on the pipeline. We evaluated Firebase but chose Supabase for SQL and row-level security on user documents. |
+
+### Tech Stack
+
 | Layer | Choice |
 |-------|--------|
 | Framework | Next.js 14 (App Router) + TypeScript |
@@ -70,17 +81,13 @@ The current codebase is the **core automation engine** powering the pilot:
 | Auth | Supabase Auth (+ demo user bypass for evaluators) |
 | Database | Supabase PostgreSQL |
 | Storage | Supabase Storage |
-| OCR | OCR.space API |
+| Primary OCR | OCR.space API (browser-direct) |
+| Fallback OCR | **Tesseract.js + WebAssembly** (client-side, no API key) |
+| PDF Rendering | **pdfjs-dist** (WebAssembly, for Tesseract fallback pipeline) |
 | JSON Parsing | Plain JavaScript (regex-based, deterministic) |
 | PDF Generation | @react-pdf/renderer |
 | Bundling | jszip |
 | Deployment | Vercel |
-
-### Why This Stack
-
-- **Regex over LLM for OCR parsing** — Trade docs have predictable, labeled fields. Regex is free, instant, and deterministic, avoiding both API cost and hallucination risk. Smart engineering where it matters.
-- **Supabase over custom backend** — Auth + DB + file storage in one, letting a small team focus on the pipeline instead of plumbing.
-- **Next.js API routes** — Keeps OCR API key server-side; one codebase for frontend + backend.
 
 ---
 
@@ -220,3 +227,52 @@ Please open an issue first for significant changes.
 ---
 
 *Built at BITS Pilani Startup Hub. Solving real problems for real exporters.*
+
+
+
+Impact
+
+What's visible today is a demo. What we're actually building is infrastructure.
+
+The core insight
+Export documents are not paperwork — they are structured information that ports, customs, and logistics systems consume to automate operations. Every delay at an Indian port today is, at its root, a document-handling delay. Fix the document layer and you unlock everything downstream.
+Operational impact — turnaround time
+
+Port turnaround time drops when documents arrive clean, validated, and machine-readable.
+Customs clearance accelerates because data moves directly between systems instead of being re-keyed.
+Fewer manual handoffs means fewer errors, fewer demurrage charges, and faster vessel cycles.
+
+Ease of doing business — unlocking the long tail of exporters
+Today, export/import is effectively gated by documentation complexity. A handicraft artisan in Jaipur, a weaver in Varanasi, or a small food processor in Kerala cannot realistically navigate the 30+ document types, multi-agency approvals, and compliance formats required to ship abroad.
+Our platform collapses that complexity into a guided, automated workflow — making export accessible to small producers who have always been export-capable but never export-enabled.
+Macro-economic flywheel
+This is why it matters at a national scale:
+
+More exporters → India's export base diversifies beyond a handful of sectors and large players.
+Diversified exports → reduced vulnerability to sector-specific shocks; stronger forex position.
+Rising export volume → manufacturing sector expands to meet demand.
+Manufacturing growth → job creation across tier-2 and tier-3 cities.
+Jobs → disposable income in new hands.
+Income → domestic demand for better, more innovative products.
+Demand → pressure on manufacturers to innovate and upgrade.
+Loop closes — and the economy compounds.
+
+We are solving the bottleneck at step 1 so the rest of the flywheel can actually spin.
+Strategic alignment and credibility
+
+Addresses 9 of the 20 "must-have" solutions identified under the India Maritime priority list.
+Accepted by DGFT (Directorate General of Foreign Trade), Ministry of Commerce — meaning the approach is validated at the policy level, not just the product level.
+
+Architectural positioning — the "UPI moment" for trade
+The analogy we keep coming back to:
+
+PhonePe and Google Pay did not build a payments network. They built the experience layer on top of NPCI's UPI rails.
+
+That is exactly what we are doing for maritime trade.
+
+NLP Marine is the underlying rails — the protocol layer for port and logistics data.
+We are the orchestration layer that sits on top — connecting service providers, exporters, customs, and ports into a single automated flow.
+Just as UPI unlocked a decade of fintech innovation by abstracting away banking complexity, a clean orchestration layer over MLP Marine can unlock a decade of trade-tech innovation in India.
+
+In one line
+We are not digitising documents. We are building the orchestration layer that turns India's maritime trade rails into a platform — so that the next million exporters can plug in, and the economy can compound on top.
