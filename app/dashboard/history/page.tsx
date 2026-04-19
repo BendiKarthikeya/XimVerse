@@ -61,18 +61,18 @@ export default function HistoryPage() {
 
   return (
     <div className="space-y-6 fade-in">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-white">Consignment History</h1>
           <p className="text-sm text-slate-500 mt-1">All generated export document sets, stored in Supabase.</p>
         </div>
         <input type="text" placeholder="Search by buyer, ID…" value={search}
           onChange={e => setSearch(e.target.value)}
-          style={{ width: 220 }} />
+          className="w-full sm:w-auto" style={{ maxWidth: 220 }} />
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {stats.map(({ label, val, color }) => (
           <div key={label} className="rounded-xl p-4 space-y-1 border border-white/8" style={{ background: 'rgba(255,255,255,0.04)' }}>
             <p className="text-xs text-slate-500">{label}</p>
@@ -83,7 +83,8 @@ export default function HistoryPage() {
 
       {/* Table */}
       <div className="rounded-2xl overflow-hidden border border-white/8" style={{ background: 'rgba(255,255,255,0.04)' }}>
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[640px]">
           <thead className="border-b border-white/10">
             <tr>
               {['Consignment ID', 'Date', 'Buyer', 'Product', 'Amount', 'Status', 'Actions'].map(h => (
@@ -122,6 +123,7 @@ export default function HistoryPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Preview modal */}
@@ -159,9 +161,9 @@ export default function HistoryPage() {
                   consignmentNo={preview.c.consignment_no} type={preview.tab} />
               )}
             </div>
-            <div className="p-4 border-t border-white/10 flex items-center justify-between">
+            <div className="p-4 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <p className="text-xs text-slate-600">{isDemo ? 'Demo mode' : 'Stored in Supabase Storage'}</p>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-2">
                 <button onClick={() => setPreview(null)}
                   className="px-4 py-2 rounded-lg border border-white/10 text-sm text-slate-400 hover:text-slate-300">Close</button>
                 {preview.c.source_json && <>

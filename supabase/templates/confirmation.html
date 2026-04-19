@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Confirm your XimVerse account</title>
+</head>
+<body style="margin:0;padding:0;background-color:#0f172a;font-family:'Segoe UI',Arial,sans-serif;">
+
+  <!-- Outer wrapper -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0f172a;padding:40px 16px;">
+    <tr>
+      <td align="center">
+
+        <!-- Card -->
+        <table width="560" cellpadding="0" cellspacing="0" style="
+          max-width:560px;
+          width:100%;
+          background:linear-gradient(145deg,#1e293b,#0f172a);
+          border-radius:16px;
+          border:1px solid rgba(99,102,241,0.25);
+          overflow:hidden;
+          box-shadow:0 0 48px rgba(99,102,241,0.12);
+        ">
+
+          <!-- Top accent bar -->
+          <tr>
+            <td style="height:4px;background:linear-gradient(90deg,#6366f1,#8b5cf6,#06b6d4);"></td>
+          </tr>
+
+          <!-- Logo area -->
+          <tr>
+            <td align="center" style="padding:36px 40px 24px;">
+              <div style="
+                display:inline-block;
+                background:#ffffff;
+                border-radius:12px;
+                padding:12px 24px;
+                box-shadow:0 4px 20px rgba(99,102,241,0.25);
+              ">
+                <img
+                  src="https://ximverse.vercel.app/logo.png"
+                  alt="XimVerse"
+                  width="160"
+                  style="display:block;max-width:160px;height:auto;"
+                />
+              </div>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding:0 40px;">
+              <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(99,102,241,0.4),transparent);"></div>
+            </td>
+          </tr>
+
+          <!-- Heading -->
+          <tr>
+            <td align="center" style="padding:32px 40px 8px;">
+              <h1 style="
+                margin:0;
+                font-size:26px;
+                font-weight:700;
+                background:linear-gradient(135deg,#818cf8,#a78bfa,#06b6d4);
+                -webkit-background-clip:text;
+                -webkit-text-fill-color:transparent;
+                background-clip:text;
+                line-height:1.3;
+              ">Confirm Your Account</h1>
+            </td>
+          </tr>
+
+          <!-- Body text -->
+          <tr>
+            <td align="center" style="padding:16px 40px 32px;">
+              <p style="
+                margin:0;
+                font-size:15px;
+                line-height:1.7;
+                color:#94a3b8;
+                text-align:center;
+                max-width:420px;
+              ">
+                Welcome to <strong style="color:#e2e8f0;">XimVerse</strong> — your export documentation suite.<br/>
+                Click the button below to verify your email and get started.
+              </p>
+            </td>
+          </tr>
+
+          <!-- CTA Button -->
+          <tr>
+            <td align="center" style="padding:0 40px 40px;">
+              <a
+                href="{{ .ConfirmationURL }}"
+                style="
+                  display:inline-block;
+                  padding:14px 40px;
+                  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+                  color:#ffffff;
+                  font-size:15px;
+                  font-weight:600;
+                  text-decoration:none;
+                  border-radius:10px;
+                  letter-spacing:0.3px;
+                  box-shadow:0 4px 24px rgba(99,102,241,0.4);
+                "
+              >
+                Confirm My Email
+              </a>
+            </td>
+          </tr>
+
+          <!-- Fallback link -->
+          <tr>
+            <td align="center" style="padding:0 40px 24px;">
+              <p style="margin:0;font-size:12px;color:#475569;text-align:center;">
+                Button not working? Copy and paste this link:<br/>
+                <a href="{{ .ConfirmationURL }}" style="color:#6366f1;word-break:break-all;">
+                  {{ .ConfirmationURL }}
+                </a>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding:0 40px;">
+              <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(99,102,241,0.2),transparent);"></div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="padding:24px 40px 32px;">
+              <p style="margin:0 0 8px;font-size:12px;color:#334155;">
+                This link expires in 24 hours. If you didn't create an account, you can safely ignore this email.
+              </p>
+              <p style="margin:0;font-size:12px;color:#334155;">
+                &copy; 2026 XimVerse Exports Pvt Ltd &middot; Bengaluru, India
+              </p>
+            </td>
+          </tr>
+
+        </table>
+        <!-- End card -->
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

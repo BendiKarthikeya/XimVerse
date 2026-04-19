@@ -156,7 +156,7 @@ OCR_SPACE_API_KEY=
 
 Users always upload exactly these two PDF types. The format is fixed, so the regex parser is precise.
 
-### Doc 1 — Commercial Invoice & Packing List (`doc_type: 'invoice'`)
+### Doc 1 — Quotation (`doc_type: 'invoice'`)
 Uploaded per consignment. Contains all shipment-specific data.
 
 Parsed JSON shape:

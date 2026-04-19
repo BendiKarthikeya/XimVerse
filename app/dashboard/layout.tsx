@@ -17,6 +17,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter()
   const [firstName, setFirstName] = useState<string | null>(null)
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -52,7 +53,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div style={{ background: '#0f172a', minHeight: '100vh' }}>
-      <header className="border-b border-white/10 px-6 py-3 flex items-center sticky top-0 z-20"
+      <header className="border-b border-white/10 px-4 sm:px-6 py-3 flex items-center sticky top-0 z-20"
         style={{ background: 'rgba(15,23,42,0.96)', backdropFilter: 'blur(14px)' }}>
 
         {/* Logo — left */}
@@ -62,8 +63,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </Link>
 
-        {/* Nav — centered */}
-        <nav className="flex-1 flex items-center justify-center gap-1">
+        {/* Nav — centered (hidden on mobile) */}
+        <nav className="hidden sm:flex flex-1 items-center justify-center gap-1">
           {NAV.map(({ href, label }) => {
             const active = pathname === href
             return (
@@ -78,8 +79,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           })}
         </nav>
 
-        {/* Right — user dropdown */}
-        <div className="flex items-center flex-none">
+        {/* Spacer on mobile */}
+        <div className="flex-1 sm:hidden" />
+
+        {/* Right — user dropdown + hamburger */}
+        <div className="flex items-center gap-2 flex-none">
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen(o => !o)}
@@ -89,7 +93,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 style={{ background: 'rgba(99,102,241,0.3)' }}>
                 {firstName?.[0]?.toUpperCase() ?? 'U'}
               </div>
-              <span className="text-sm text-slate-200 font-medium">{firstName ?? '…'}</span>
+              <span className="hidden sm:inline text-sm text-slate-200 font-medium">{firstName ?? '…'}</span>
               <svg className={`w-3.5 h-3.5 text-slate-400 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -127,9 +131,41 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </div>
             )}
           </div>
+
+          {/* Hamburger — mobile only */}
+          <button
+            className="sm:hidden flex items-center justify-center w-8 h-8 rounded-lg border border-white/10 text-slate-400 hover:text-white transition-all"
+            onClick={() => setMenuOpen(o => !o)}>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {menuOpen
+                ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />}
+            </svg>
+          </button>
         </div>
       </header>
-      <main className="max-w-6xl mx-auto px-6 py-10">
+
+      {/* Mobile nav drawer */}
+      {menuOpen && (
+        <div className="sm:hidden border-b border-white/10 px-4 py-3 flex flex-col gap-1 z-10"
+          style={{ background: 'rgba(15,23,42,0.98)' }}>
+          {NAV.map(({ href, label }) => {
+            const active = pathname === href
+            return (
+              <Link key={href} href={href}
+                onClick={() => setMenuOpen(false)}
+                className="px-3 py-2.5 rounded-lg text-sm font-medium transition-all"
+                style={active
+                  ? { background: 'rgba(99,102,241,0.25)', color: '#fff', border: '1px solid rgba(99,102,241,0.3)' }
+                  : { color: '#94a3b8', border: '1px solid transparent' }}>
+                {label}
+              </Link>
+            )
+          })}
+        </div>
+      )}
+
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
         {children}
       </main>
     </div>

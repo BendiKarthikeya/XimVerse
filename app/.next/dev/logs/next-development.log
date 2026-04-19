@@ -2,3 +2,10 @@
 {"timestamp":"00:17:46.583","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/karthikeya/Documents/XimVerse/app/app'"}
 {"timestamp":"00:19:37.296","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/karthikeya/Documents/XimVerse/app/app'"}
 {"timestamp":"00:19:37.299","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/karthikeya/Documents/XimVerse/app/app'"}
+{"timestamp":"01:31:48.359","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/karthikeya/Documents/XimVerse/app/app'"}
+{"timestamp":"01:31:48.360","source":"Server","level":"ERROR","message":"⨯ \"unhandledRejection:\" Error: ENOENT: no such file or directory, scandir '/Users/karthikeya/Documents/XimVerse/app/app'"}
+{"timestamp":"01:31:48.362","source":"Server","level":"ERROR","message":"⨯ \"unhandledRejection: \" Error: ENOENT: no such file or directory, scandir '/Users/karthikeya/Documents/XimVerse/app/app'"}
+{"timestamp":"01:32:11.040","source":"Server","level":"LOG","message":"✓ Compiled in 22.9s"}
+{"timestamp":"01:32:26.132","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/karthikeya/Documents/XimVerse/app/app'"}
+{"timestamp":"01:32:26.133","source":"Server","level":"ERROR","message":"⨯ \"unhandledRejection:\" Error: ENOENT: no such file or directory, scandir '/Users/karthikeya/Documents/XimVerse/app/app'"}
+{"timestamp":"01:32:26.133","source":"Server","level":"ERROR","message":"⨯ \"unhandledRejection: \" Error: ENOENT: no such file or directory, scandir '/Users/karthikeya/Documents/XimVerse/app/app'"}

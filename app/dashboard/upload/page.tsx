@@ -208,8 +208,8 @@ export default function UploadPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
-        <UploadZone n={1} label="Commercial Invoice & Packing List" sublabel="Per-consignment data — buyer, shipment, products"
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <UploadZone n={1} label="Quotation" sublabel="Per-consignment data — buyer, shipment, products"
           color="99,102,241" state={state1} json={json1} err={err1}
           inputRef={ref1} onPick={onFilePick('invoice')}
           showToggle={true} showJson={showJson1} onToggle={() => setShowJson1(v => !v)} />
@@ -220,14 +220,14 @@ export default function UploadPage() {
       </div>
 
       {bothDone && (
-        <div className="rounded-2xl p-5 flex items-center justify-between border border-white/8 fade-in"
+        <div className="rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-white/8 fade-in"
           style={{ background: 'rgba(255,255,255,0.04)' }}>
           <div>
             <p className="font-semibold text-white">Both documents extracted successfully</p>
             <p className="text-sm text-slate-400 mt-0.5">Ready to create a consignment and generate export PDFs</p>
           </div>
           <button onClick={() => router.push('/dashboard/create')}
-            className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white flex items-center gap-2 transition-all"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-semibold text-white flex items-center justify-center gap-2 transition-all"
             style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}>
             Create New Consignment
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

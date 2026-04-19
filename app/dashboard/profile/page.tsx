@@ -62,7 +62,7 @@ export default function ProfilePage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         {/* Summary card */}
         <div className="rounded-2xl p-6 space-y-5 border border-white/8" style={{ background: 'rgba(255,255,255,0.04)' }}>
           <div className="flex flex-col items-center text-center space-y-3 pb-4 border-b border-white/10">
@@ -99,7 +99,7 @@ export default function ProfilePage() {
         {/* Edit form */}
         <div className="col-span-2 rounded-2xl p-6 space-y-5 border border-white/8" style={{ background: 'rgba(255,255,255,0.04)' }}>
           <h3 className="font-semibold text-slate-200">Edit Profile Details</h3>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {field('Company Name', 'company_name', 'XIMVERSE EXPORTS PVT LTD')}
             {field('Email', 'email', 'export@company.com')}
             {field('Phone', 'phone', '+91-9876543210')}

@@ -176,7 +176,7 @@ export default function CreatePage() {
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {/* Left card */}
             <div className="rounded-2xl p-6 space-y-4 border border-white/8" style={{ background: 'rgba(255,255,255,0.04)' }}>
               <SectionHeader label="Exporter (from Profile)" />
@@ -309,7 +309,7 @@ export default function CreatePage() {
             />
           </div>
 
-          <div className="rounded-2xl p-5 flex items-center justify-between border border-white/8"
+          <div className="rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-white/8"
             style={{ background: 'rgba(255,255,255,0.04)' }}>
             <div>
               <p className="font-semibold text-white">Consignment {consignmentNo} saved</p>
@@ -317,7 +317,7 @@ export default function CreatePage() {
                 Both PDFs ready · {isDemo ? 'Demo mode' : 'Stored in Supabase Storage'}
               </p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               <PDFDownloadBtn profile={profile} sourceJson={sourceJson} consignmentNo={consignmentNo}
                 type="invoice" label="↓ Invoice PDF" />
               <PDFDownloadBtn profile={profile} sourceJson={sourceJson} consignmentNo={consignmentNo}

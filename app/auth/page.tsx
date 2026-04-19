@@ -27,7 +27,10 @@ function AuthForm() {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { first_name: firstName, last_name: lastName } },
+          options: {
+            data: { first_name: firstName, last_name: lastName },
+            emailRedirectTo: `${window.location.origin}/auth/callback`,
+          },
         })
         if (error) throw error
         router.push('/onboarding')
@@ -59,7 +62,7 @@ function AuthForm() {
         </div>
         <div className="relative z-10">
           <div className="bg-white rounded-lg px-2 py-0.5 inline-block">
-            <img src="/logo.png" alt="XimVerse" className="h-10 w-20" />
+            <img src="/logo.png" alt="XimVerse" className="h-12 w-20" />
           </div>
         </div>
         <div className="space-y-6 relative z-10">
@@ -101,7 +104,7 @@ function AuthForm() {
           <div>
             <div className="mb-6">
               <div className="bg-white rounded-lg px-2 py-0.5 inline-block">
-                <img src="/logo.png" alt="XimVerse" className="h-10 w-32" />
+                <img src="/logo.png" alt="XimVerse" className="h-10 w-20" />
               </div>
             </div>
 
@@ -135,7 +138,7 @@ function AuthForm() {
               )}
               <div>
                 <label className="text-xs text-slate-400 mb-1.5 block">Email address</label>
-                <input type="email" placeholder="export@yourcompany.com" value={email} onChange={e => setEmail(e.target.value)} />
+                <input type="email" placeholder="export@yourcompany.com" value={email} onChange={e => setEmail(e.target.value)} suppressHydrationWarning />
               </div>
               <div>
                 <label className="text-xs text-slate-400 mb-1.5 block">Password</label>
