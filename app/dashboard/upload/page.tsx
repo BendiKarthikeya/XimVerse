@@ -7,7 +7,7 @@ import { DEMO_SOURCE_JSON, DEMO_PROFILE } from '@/lib/demoData'
 import { parseInvoiceText, parseProfileText } from '@/lib/parseOcrText'
 import type { InvoiceJson, ProfileJson } from '@/types'
 
-type UploadState = 'idle' | 'uploading' | 'done' | 'error'
+type UploadState = 'idle' | 'uploading' | 'fallback' | 'done' | 'error'
 
 export default function UploadPage() {
   const router = useRouter()
@@ -77,6 +77,7 @@ export default function UploadPage() {
         if (!rawText.trim()) throw new Error('OCR.space returned empty text')
       } catch {
         // OCR.space failed — fall back to client-side WebAssembly pipeline (pdf.js + Tesseract.js)
+        setS('fallback')
         const { extractTextWithWasm } = await import('@/lib/ocrFallback')
         rawText = await extractTextWithWasm(file)
       }
@@ -168,6 +169,12 @@ export default function UploadPage() {
           </div>
         </div>}
 
+        {state === 'fallback' && <div className="space-y-3">
+          <div className="w-10 h-10 mx-auto rounded-full border-2 border-amber-500 border-t-transparent animate-spin" />
+          <p className="text-sm text-amber-400">OCR.space quota exhausted — switching to WebAssembly engine…</p>
+          <p className="text-xs text-slate-500">Tesseract.js is running in-browser. This may take 15–30 seconds.</p>
+        </div>}
+
         {state === 'done' && <div className="space-y-2">
           <div className="w-10 h-10 mx-auto rounded-full bg-emerald-500/20 flex items-center justify-center">
             <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -220,7 +227,7 @@ export default function UploadPage() {
     </div>
   )
 
-  const bothDone = state1 === 'done' && state2 === 'done'
+  const bothDone = (state1 === 'done') && (state2 === 'done')
 
   return (
     <div className="space-y-6 fade-in">
